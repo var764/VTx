@@ -8,6 +8,7 @@ Features implemented:
 - HealthRecords permissions + HealthKit passive query integration
 - New consent flow (new images, cards, and file sections added)
 - User sign-ins (user/pwd or Google)
+
 Work in Progress:
 - SF12
 - WIQ

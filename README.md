@@ -1,5 +1,5 @@
 Working Repo for VascTracX
-- Currently correcting erroneous commit, for repo functionality (slightly older version, buggy scheduler integration for the onboarding survey) - build/add necessary pods within the pods folder (which can be pulled from AssignmentTwo) and delete the placeholder file, and delete the dummy file in Base.lproj
+- Currently correcting erroneous commit, for repo functionality (slightly older version, missing some UI/UX changes + buggy scheduler integration for the onboarding survey) - build/add necessary pods within the pods folder (which can be pulled from AssignmentTwo) and delete the placeholder file, and delete the dummy file in Base.lproj
 
 Features implemented:
 - Onboarding survey (with scheduler + GCP)

@@ -16,6 +16,7 @@ Features implemented (UPDATED March 9):
 
 Work in Progress:
 - Additional useful graphs/dashboards for the user & physician + to inform querying
+- Make WIQ Chart more dynamic
 - UI/UX Changes
 
 Next Steps:

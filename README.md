@@ -15,7 +15,7 @@ Features implemented (UPDATED March 9):
 - User sign-ins (user/pwd or Google)
 
 Work in Progress:
-- Additional seful graphs/dashboards for the user + to inform querying
+- Additional useful graphs/dashboards for the user & physician + to inform querying
 - UI/UX Changes
 
 Next Steps:

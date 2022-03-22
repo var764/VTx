@@ -26,10 +26,9 @@ class SurveyItemViewController: OCKInstructionsTaskViewController, ORKTaskViewCo
         }
 
         // 2b. If the user attempted to mark the task complete, display a ResearchKit survey.
-      //  let answerFormat = ORKAnswerFormat.scale(withMaximumValue: 5, minimumValue: 1, defaultValue: 5, step: 1, vertical: false, maximumValueDescription: "A LOT!", minimumValueDescription: "a little")
-      //  let feedbackStep = ORKQuestionStep(identifier: "feedback", title: "Feedback", question: "How are you liking CardinalKit?", answer: answerFormat)
-      //  let surveyTask = ORKOrderedTask(identifier: "feedback", steps: [feedbackStep])
-        let surveyViewController = ORKTaskViewController(task: OnboardingSurvey.onboardingSurvey, taskRun: nil)
+        
+        //let surveyViewController = ORKTaskViewController(task: OnboardingSurvey.onboardingSurvey, taskRun: nil)
+        let surveyViewController = ORKTaskViewController(task: WIQSurvey.wiqSurvey, taskRun: nil)
         surveyViewController.delegate = self
 
         // 3a. Present the survey to the user
@@ -44,47 +43,51 @@ class SurveyItemViewController: OCKInstructionsTaskViewController, ORKTaskViewCo
             return
         }
         // 4a. Retrieve the result from the ResearchKit survey
-        let survey = taskViewController.result.results!.first(where: {$0.identifier == "OnboardingTask"}) as! ORKStepResult
-        //result.results!.first(where: { $0.identifier == "feedback" }) as! ORKStepResult
-        //let feedbackResult = survey.results!.first as! ORKScaleQuestionResult
-        //let dobResult = (taskViewController.result.stepResult(forStepIdentifier: "DOB")?.results?.first as! ORKResult) as! ORKDateQuestionResult //survey.firstResult as! ORKDateQuestionResult
         
-        //let genderResult = taskViewController.result.stepResult(forStepIdentifier: "Gender")?.results?.first as! ORKResult
-        
-        //let smokingResult = taskViewController.result.stepResult(forStepIdentifier: "SmokingStatus")?.results?.first as! ORKResult
-        
-        //let plannedSurgeryResult =  taskViewController.result.stepResult(forStepIdentifier: "PlannedSurgery")?.results?.first as! ORKResult
-        
-        //let upcomingProcedureResult = taskViewController.result.stepResult(forStepIdentifier: "UpcomingProcedure")?.results?.first as! ORKResult
+        let taskResult = taskViewController.result.results
+        let identifiers = ["WIQ Endurance 1", "WIQ Endurance 2", "WIQ Endurance 3", "WIQ Endurance 4", "WIQ Endurance 5", "WIQ Endurance 6", "WIQ Endurance 7"]
+        let distWeights = [1, 50, 150, 300, 600, 900, 1500]
+        var wiqScore = 0
 
-        if true { //survey != nil {
-        //if let ScaleAnswer = feedbackResult.scaleAnswer{
-            // 4b. Save the result into CareKit's store
-            //let answer = Int(truncating: ScaleAnswer)
-
-            //var surveyIterator = survey.userInfo?.makeIterator()
-            let identifiers = ["DOB", "Gender", "SmokingStatus", "PlannedSurgery", "UpcomingProcedure"]
-            
-            //let results = [dobResult, genderResult, smokingResult, plannedSurgeryResult, upcomingProcedureResult]
-            
-            var count = 0
-            
-            for elem in identifiers {
-                var result = survey.result(forIdentifier: elem)
-                //var result = elem
-                controller.appendOutcomeValue(value: result as! OCKOutcomeValueUnderlyingType, at: IndexPath(item: count, section: 0), completion: nil)
+        do {
+            if let json = try CK_ORKSerialization.CKTaskAsJson(result: taskViewController.result,task: taskViewController.task!)
+            {
                 
-                count += 1
+                let resultsArr = json["results"] as? [Any]
+                let subResults = resultsArr?[1] as? [String:Any]
+                let resultsNested = subResults?["results"] as? [Any]
+                
+                if let results = resultsNested
+                {
+                    for (index, elem) in results.enumerated()
+                    {
+                        var test = elem as? [String:Any]
+                        var score = Int(test?["answer"] as? String ?? "") ?? 0
+                        wiqScore += ((5 - score) * distWeights[index])
+                        print(String(wiqScore))
+                    }
+                    var finalScore = (Double(wiqScore) / 17500) * 100
+                    print(finalScore)
+                    
+                    do {
+                        try CKSendHelper.sendToFirestoreWithUUID(json: ["wiqscore": finalScore, "date": Date().timeIntervalSinceReferenceDate], collection: "wiqscore", withIdentifier: UUID().uuidString)
+                                    } catch {
+                                        print("error")
+                                    }
+                    
+                    
+                    controller.appendOutcomeValue(value: finalScore, at: IndexPath(item: 0, section: 0), completion: nil)
+                    
+                }
+                
+                let gcpDelegate = CKUploadToGCPTaskViewControllerDelegate()
+                gcpDelegate.taskViewController(taskViewController, didFinishWith: reason, error: error)
+
             }
-            // 5. Upload results to GCP, using the CKTaskViewControllerDelegate class.
-            let gcpDelegate = CKUploadToGCPTaskViewControllerDelegate()
-            gcpDelegate.taskViewController(taskViewController, didFinishWith: reason, error: error)
         }
-        else{
-            taskView.completionButton.isSelected = false
-            let gcpDelegate = CKUploadToGCPTaskViewControllerDelegate()
-            gcpDelegate.taskViewController(taskViewController, didFinishWith: .discarded, error: error)
-        }
+        catch {
+           print("error.")
+       }
     }
 }
 
@@ -104,7 +107,7 @@ class SurveyItemViewSynchronizer: OCKInstructionsTaskViewSynchronizer {
         let element: [OCKAnyEvent]? = context.viewModel.first
         let firstEvent = element?.first
         
-        view.headerView.detailLabel.text = "Initial patient information intake."
+        view.headerView.detailLabel.text = "Evaluate patient mobility difficulty."
         
         /*if let answer = firstEvent?.outcome?.values.first?.integerValue {
             view.headerView.detailLabel.text = "CardinalKit Rating: \(answer)"

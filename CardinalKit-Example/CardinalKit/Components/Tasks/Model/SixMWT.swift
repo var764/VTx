@@ -11,10 +11,11 @@ import ResearchKit
 
 struct SixMWT {
     static let sixMWTTask: ORKOrderedTask = {
-        let intendedUseDescription = "Tests ability to walk"
+        let intendedUseDescription = "Evaluates patient ability to walk at a normal pace."
         
         return ORKOrderedTask.fitnessCheck(withIdentifier: "6MWT", intendedUseDescription: "Please walk at a normal pace for 6 minutes.", walkDuration: TimeInterval(360), restDuration: TimeInterval(0), options: ORKPredefinedTaskOption.excludeInstructions)
         
     }()
 
 }
+

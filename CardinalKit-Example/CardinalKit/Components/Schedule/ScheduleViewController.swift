@@ -10,6 +10,11 @@ import CareKit
 import CareKitStore
 import UIKit
 import SwiftUI
+import FirebaseFirestore
+import RealmSwift
+import ResearchKit
+import CardinalKit
+import CareKitUI
 
 class ScheduleViewController: OCKDailyPageViewController {
     
@@ -20,7 +25,7 @@ class ScheduleViewController: OCKDailyPageViewController {
     
     override func dailyPageViewController(_ dailyPageViewController: OCKDailyPageViewController, prepare listViewController: OCKListViewController, for date: Date) {
         
-        let identifiers = ["doxylamine", "nausea", "coffee", "survey", "steps", "heartRate", "surveys", "OnboardingTask"]
+        let identifiers = ["surveys", "WIQTask", "OnboardingTask", "SFTwelveTask", "6MWT"]
         var query = OCKTaskQuery(for: date)
         query.ids = identifiers
         query.excludesTasksWithNoEvents = true
@@ -31,7 +36,7 @@ class ScheduleViewController: OCKDailyPageViewController {
             case .success(let tasks):
 
                 // Add a non-CareKit view into the list
-                let tipTitle = "Customize your app!"
+               /* let tipTitle = "Customize your app!"
                 let tipText = "Start with the CKConfiguration.plist file."
 
                 // Only show the tip view on the current date
@@ -41,33 +46,136 @@ class ScheduleViewController: OCKDailyPageViewController {
                     tipView.headerView.detailLabel.text = tipText
                     tipView.imageView.image = UIImage(named: "GraphicOperatingSystem")
                     listViewController.appendView(tipView, animated: false)
-                }
+                } */
 
-                if #available(iOS 14, *), let walkTask = tasks.first(where: { $0.id == "steps" }) {
+               /* if #available(iOS 14, *), let walkTask = tasks.first(where: { $0.id == "6MWT" }) {
 
-                    let view = NumericProgressTaskView(
+                    let view = SimpleTaskView(
+                        task: walkTask,
+                        eventQuery: OCKEventQuery(for: date),
+                        storeManager: self.storeManager).padding([.vertical], 10)
+                    
+                   /* NumericProgressTaskView(
                         task: walkTask,
                         eventQuery: OCKEventQuery(for: date),
                         storeManager: self.storeManager)
-                        .padding([.vertical], 10)
+                        .padding([.vertical], 10) */
 
                     listViewController.appendViewController(view.formattedHostingController(), animated: false)
-                }
+                } */
                 
                 //Onboarding Survey//
                 
-                if let surveyTask = tasks.first(where: {$0.id == "OnboardingTask"}) {
+                if let wiqSurveyTask = tasks.first(where: {$0.id == "WIQTask"}) {
+                    //"OnboardingTask"
                     let surveyCard = SurveyItemViewController(
                         viewSynchronizer: SurveyItemViewSynchronizer(),
-                        task: surveyTask,
+                        task: wiqSurveyTask,
                         eventQuery: .init(for: date),
                         storeManager: self.storeManager)
+        
                     listViewController.appendViewController(surveyCard, animated: false)
                 }
+                
+                if let onboardingSurveyTask = tasks.first(where: {$0.id == "OnboardingTask"}) {
+                    let surveyCard = OnboardingSurveyViewController(
+                        viewSynchronizer: OnboardingSurveyViewSynchronizer(),
+                        task: onboardingSurveyTask,
+                        eventQuery: .init(for: date),
+                        storeManager: self.storeManager)
+                                                                    
+                    listViewController.appendViewController(surveyCard, animated: false)
+                }
+                
+                if let sfTwelveSurveyTask = tasks.first(where: {$0.id == "SFTwelveTask"})
+                {
+                    let surveyCard = SFTwelveSurveyViewController(
+                        viewSynchronizer: SFTwelveSurveyViewSynchronizer(),
+                        task: sfTwelveSurveyTask,
+                        eventQuery: .init(for: date),
+                        storeManager: self.storeManager)
+                    
+                    listViewController.appendViewController(surveyCard, animated: false)
+                }
+                
+                if let sixMWT = tasks.first(where: {$0.id == "6MWT"}) {
+                    let surveyCard = SixMWTActiveViewController(
+                        viewSynchronizer: SixMWTActiveViewSynchronizer(),
+                        task: sixMWT,
+                        eventQuery: .init(for: date),
+                        storeManager: self.storeManager)
+                    
+                    listViewController.appendViewController(surveyCard, animated: false)
+                } 
+                //WIQ Chart//
+                
+                // dynamic gradient colors
+                let wiqGradientStart = UIColor { traitCollection -> UIColor in
+                    return traitCollection.userInterfaceStyle == .light ? #colorLiteral(red: 0.9960784314, green: 0.3725490196, blue: 0.368627451, alpha: 1) : #colorLiteral(red: 0.8627432641, green: 0.2630574384, blue: 0.2592858295, alpha: 1)
+                }
+                let wiqGradientEnd = UIColor { traitCollection -> UIColor in
+                    return traitCollection.userInterfaceStyle == .light ? #colorLiteral(red: 0.9960784314, green: 0.4732026144, blue: 0.368627451, alpha: 1) : #colorLiteral(red: 0.8627432641, green: 0.3598620686, blue: 0.2592858295, alpha: 1)
+                }
+                
+                
+                func noReturn() {
+                    print("No data.")
+                }
+                
+                let aggregator = OCKEventAggregator.custom {events -> Double in
+                    let value = events.first?.outcome?.values.first?.doubleValue ?? 0
+                    return Double(value)
+                }
+                                                            
+                let wiqDataSeries = OCKDataSeriesConfiguration(
+                    taskID: "WIQTask",
+                    legendTitle: "WIQ Score (%)",
+                    gradientStartColor: wiqGradientStart,
+                    gradientEndColor: wiqGradientEnd,
+                    markerSize: 3,
+                    eventAggregator: aggregator)
+                
+                let insightsCard = OCKCartesianChartViewController(
+                    plotType: .line,
+                    selectedDate: date,
+                    configurations: [wiqDataSeries],
+                    storeManager: self.storeManager)
+
+                //insightsCard.chartView.graphView.axisView.autoresizesSubviews = true
+                insightsCard.chartView.autoresizesSubviews = true
+                insightsCard.chartView.graphView.accessibilityRespondsToUserInteraction = true
+                insightsCard.chartView.graphView.xMinimum = 0
+                insightsCard.chartView.graphView.xMaximum = 20
+
+                
+                insightsCard.chartView.headerView.titleLabel.text = "WIQ Score"
+                insightsCard.chartView.headerView.detailLabel.text = "Weekly Tracking."
+                insightsCard.chartView.accessibilityLabel = "WIQ Score, Weekly Tracking."
+                listViewController.appendViewController(insightsCard, animated: false)
+            
+            
+               /* OCKChartViewController.
+                
+                CKSendHelper.getFromFirestore(collection: "wiqscore", identifier: "userID") { (document, error) in
+                    
+                    guard let scores = document?.data()?["wiqscore"] as? [[AnyHashable: Any]] else {                        return
+                    }
+                    guard let dates = document?.data()?["date"] as? [[AnyHashable: Any]] else {
+                        return
+                    }
+                    
+                    for elem in scores {
+                        print(elem)
+                    }
+                    
+                    for el in dates {
+                        print(el)
+                    }
+                } */
 
                 // Since the coffee task is only scheduled every other day, there will be cases
                 // where it is not contained in the tasks array returned from the query.
-                if let coffeeTask = tasks.first(where: { $0.id == "coffee" }) {
+                /*if let coffeeTask = tasks.first(where: { $0.id == "coffee" }) {
                     let coffeeCard = OCKSimpleTaskViewController(task: coffeeTask, eventQuery: .init(for: date),
                                                                  storeManager: self.storeManager)
                     listViewController.appendViewController(coffeeCard, animated: false)
@@ -86,7 +194,7 @@ class ScheduleViewController: OCKDailyPageViewController {
                         storeManager: self.storeManager)
                     
                     listViewController.appendViewController(surveyCard, animated: false)
-                }
+                } */
                 // Create a card with all surveys events
 //                let surveys = tasks.filter({ $0.id.contains("Survey_") })
 //                if surveys.count>0{

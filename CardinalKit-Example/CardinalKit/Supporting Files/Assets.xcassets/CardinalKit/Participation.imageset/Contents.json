@@ -1,14 +1,17 @@
 {
   "images" : [
     {
+      "filename" : "Participation@1x-removebg-preview.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Participation@2x-removebg-preview.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Participation@3x-removebg-preview.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

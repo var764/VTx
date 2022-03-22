@@ -9,9 +9,9 @@
 import SwiftUI
 import ResearchKit
 
-struct LocalTaskListItemView: View {
+/*struct LocalTaskListItemView: View {
     
-    let item: LocalTaskItem
+   let item: LocalTaskItem
 
     @State var showingDetail = false
     
@@ -42,6 +42,7 @@ struct LocalTaskListItemView: View {
 
 struct LocalTaskListItemView_Previews: PreviewProvider {
     static var previews: some View {
-        LocalTaskListItemView(item: .sampleCoreMotionAppleWatch)
+        LocalTaskListItemView(item: .sixMinWalkTest)
     }
 }
+*/

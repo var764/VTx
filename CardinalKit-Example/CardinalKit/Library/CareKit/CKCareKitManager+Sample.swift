@@ -176,18 +176,39 @@ internal extension OCKStore {
             }
         })
         
-        //Add Onboarding Survey
+        //Add WIQ Survey
         
         let morning = Calendar.current.startOfDay(for: Date())
         //reset onboarding every year
-        let surveyElem = OCKScheduleElement(start: morning, end: nil, interval: DateComponents(day:365))
+        let wiqScheduleElem = OCKScheduleElement(start: morning, end: nil, interval: DateComponents(day:7))
         
-        let surveySchedule = OCKSchedule(composing: [surveyElem])
-        var survey = OCKTask(id: "OnboardingTask", title: "Onboarding Survey", carePlanUUID: nil, schedule: surveySchedule)
-        survey.impactsAdherence = true
-        survey.instructions = "Complete the onboarding survey."
+        let wiqSurveySchedule = OCKSchedule(composing: [wiqScheduleElem])
+        var wiqSurveyTask = OCKTask(id: "WIQTask", title: "WIQ Survey", carePlanUUID: nil, schedule: wiqSurveySchedule) //"OnboardingTask", "Onboarding Survey"
+        wiqSurveyTask.impactsAdherence = true
+        wiqSurveyTask.instructions = "Walking Impairment Questionnaire"//"Complete the onboarding survey."
         
-        addTasks([survey], callbackQueue: .main, completion: nil)
+        //Add Onboarding Survey
+        
+        let onboardingScheduleElem = OCKScheduleElement(start: morning, end: nil, interval: DateComponents(day:365))
+        
+        let onboardingSurveySchedule = OCKSchedule(composing: [onboardingScheduleElem])
+        var onboardingSurveyTask = OCKTask(id: "OnboardingTask", title: "Onboarding Survey", carePlanUUID: nil, schedule: onboardingSurveySchedule)
+        onboardingSurveyTask.impactsAdherence = true
+        onboardingSurveyTask.instructions = "Patient Onboarding Survey - Initial Info Intake."
+        
+        let sixMWTScheduleElem = OCKScheduleElement(start: morning, end: nil, interval: DateComponents(day: 7))
+        let sixMWTActiveSchedule = OCKSchedule(composing: [sixMWTScheduleElem])
+        var sixMWTActiveTask = OCKTask(id: "6MWT", title: "6 Minute Walking Test", carePlanUUID: nil, schedule: sixMWTActiveSchedule)
+        sixMWTActiveTask.impactsAdherence = true
+        sixMWTActiveTask.instructions = "Evaluate Patient Walking Ability."
+        
+        let sfTwelveScheduleElem = OCKScheduleElement(start: morning, end: nil, interval: DateComponents(day: 28))
+        let sfTwelveSurveySchedule = OCKSchedule(composing: [sfTwelveScheduleElem])
+        var sfTwelveSurveyTask = OCKTask(id: "SFTwelveTask", title: "SF-12 Health Questionnaire", carePlanUUID: nil, schedule: sfTwelveSurveySchedule)
+        sfTwelveSurveyTask.impactsAdherence = true
+        sfTwelveSurveyTask.instructions = "Complete Monthly Health Survey."
+        
+        addTasks([onboardingSurveyTask, wiqSurveyTask, sixMWTActiveTask, sfTwelveSurveyTask], callbackQueue: .main, completion: nil)
         createContacts()
         
     }
@@ -195,12 +216,12 @@ internal extension OCKStore {
     func createContacts() {
         var contact1 = OCKContact(id: "oliver", givenName: "Oliver",
                                   familyName: "Aalami", carePlanUUID: nil)
-        contact1.asset = "OliverAalami"
+        contact1.asset = "Contact1"
         contact1.title = "Vascular Surgeon"
-        contact1.role = "Dr. Aalami is the director of the CardinalKit project."
+        contact1.role = "Dr. Aalami is one of the Principal Investigators of the VascTrac study."
         contact1.emailAddresses = [OCKLabeledValue(label: CNLabelEmailiCloud, value: "aalami@stanford.edu")]
-        contact1.phoneNumbers = [OCKLabeledValue(label: CNLabelWork, value: "(111) 111-1111")]
-        contact1.messagingNumbers = [OCKLabeledValue(label: CNLabelWork, value: "(111) 111-1111")]
+        contact1.phoneNumbers = [OCKLabeledValue(label: CNLabelWork, value: "(650) 315-3236")]
+        contact1.messagingNumbers = [OCKLabeledValue(label: CNLabelWork, value: "(650) 315-3236")]
 
         contact1.address = {
             let address = OCKPostalAddress()
@@ -211,13 +232,14 @@ internal extension OCKStore {
             return address
         }()
 
-        var contact2 = OCKContact(id: "johnny", givenName: "Johnny",
-                                  familyName: "Appleseed", carePlanUUID: nil)
-        contact2.asset = "JohnnyAppleseed"
-        contact2.title = "OBGYN"
-        contact2.role = "Dr. Appleseed is an OBGYN with 13 years of experience."
-        contact2.phoneNumbers = [OCKLabeledValue(label: CNLabelWork, value: "(324) 555-7415")]
-        contact2.messagingNumbers = [OCKLabeledValue(label: CNLabelWork, value: "(324) 555-7415")]
+        var contact2 = OCKContact(id: "elsie", givenName: "Elsie",
+                                  familyName: "Ross", carePlanUUID: nil)
+        contact2.asset = "Contact2"
+        contact2.title = "Vascular Surgeon"
+        contact2.role = "Dr. Ross is one of the Principal Investigators of the VascTrac study."
+        contact1.emailAddresses = [OCKLabeledValue(label: CNLabelEmailiCloud, value: "elsie.ross@stanford.edu")]
+        contact2.phoneNumbers = [OCKLabeledValue(label: CNLabelWork, value: "(650) 725-5227")]
+        contact2.messagingNumbers = [OCKLabeledValue(label: CNLabelWork, value: "(650) 725-5227")]
         contact2.address = {
             let address = OCKPostalAddress()
             address.street = "318 Campus Drive"

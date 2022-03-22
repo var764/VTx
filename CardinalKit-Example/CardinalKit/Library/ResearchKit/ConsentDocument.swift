@@ -19,12 +19,23 @@ class ConsentDocument: ORKConsentDocument {
         title = NSLocalizedString(consentTitle, comment: "")
         sections = []
         
+        let researchPurpose = ORKConsentSection(type: .custom)
+        researchPurpose.title = """
+            Research Purpose
+            """
+        researchPurpose.content = "You are invited to participate in a research study of activity in patients who are considering having an operation. We hope to learn how activity changes over time in people who undergo procedures and how changes in activity could predict your speed to recovery. You are eligible for this study if you are older than 18 years old and speak English. Health information provided by you and by reviewing your health records will be used to identify trends between physical fitness, participant demographics and outcomes. Furthermore, certain non-personally identifying information collected and analyzed in this study may be shared with external research partner(s). This research study is looking for 1000 participants."
+        
+        researchPurpose.summary = "VascTrac is a research study of activity in patients who are considering having an operation. We hope to learn how activity changes over time in people who undergo procedures and how changes in activity could predict your recovery."
+        researchPurpose.customImage = UIImage(named: "Research")!
+        
         let voluntaryParticipation = ORKConsentSection(type: .custom)
         voluntaryParticipation.title = """
             Voluntary Participation
             """
         voluntaryParticipation.summary = "Your participation in this study is entirely voluntary, and you may choose to not participate or withdraw from this study without loss or negative effects on medical care."
         voluntaryParticipation.content = "Your participation in this study is entirely voluntary.  Your decision not to participate will not have any negative effect on you or your medical care.  You can decide to participate now but withdraw your consent later and stop being in the study without any loss of benefits or medical care you are entitled to."
+        
+        voluntaryParticipation.customImage = UIImage(named: "Participation")!
         
         let financials = ORKConsentSection(type: .custom)
         financials.title = """
@@ -123,6 +134,8 @@ class ConsentDocument: ORKConsentDocument {
             }
         }
         
+        sections?.remove(at: 0)
+        sections?.insert(researchPurpose, at: 0)
         sections?.insert(voluntaryParticipation, at: 1)
         sections?.append(financials)
         sections?.append(risks)

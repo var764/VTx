@@ -23,25 +23,30 @@ struct MainUIView: View {
     
     var body: some View {
         TabView {
-            TasksUIView(color: self.color).tabItem {
+            /*TasksUIView(color: self.color).tabItem {
                 Image("tab_tasks").renderingMode(.template)
                 Text("Tasks")
-            }
+            }*/
             
             if useCareKit && carekitLoaded {
                 ScheduleViewControllerRepresentable()
                     .ignoresSafeArea(edges: .all)
                     .tabItem {
                         Image("tab_schedule").renderingMode(.template)
-                        Text("Schedule")
+                        Text("Tasks")
                 }
                 
                 CareTeamViewControllerRepresentable()
                     .ignoresSafeArea(edges: .all)
                     .tabItem {
-                        Image("tab_care").renderingMode(.template)
+                        Image("tab_tasks").renderingMode(.template)
                         Text("Contact")
                 }
+                
+              /*  ChartViewControllerRepresentable().ignoresSafeArea(edges: .all).tabItem {
+                    Image("tab_care").renderingMode(.template)
+                    Text("Progress")
+                } */
             }
 
             ProfileUIView(color: self.color).tabItem {

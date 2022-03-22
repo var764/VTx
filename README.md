@@ -1,7 +1,7 @@
 Working Repo for VascTracX
 - Currently correcting erroneous commit, for repo functionality (slightly older version, missing some UI/UX changes) - build/add necessary pods within the pods folder (which can be pulled from AssignmentTwo) and delete the placeholder file, and delete the dummy file in Base.lproj
 
-Features implemented (UPDATED ~March 9~ March 12):
+Features implemented (UPDATED March 21):
 - Onboarding survey
 - 6MWT
 - SF12

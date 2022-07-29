@@ -9,7 +9,6 @@
 import SwiftUI
 import ResearchKit
 import CardinalKit
-import Charts
 import UIKit
 
 /*struct TasksUIView: View {

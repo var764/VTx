@@ -42,11 +42,6 @@ struct MainUIView: View {
                         Image("tab_tasks").renderingMode(.template)
                         Text("Contact")
                 }
-                
-              /*  ChartViewControllerRepresentable().ignoresSafeArea(edges: .all).tabItem {
-                    Image("tab_care").renderingMode(.template)
-                    Text("Progress")
-                } */
             }
 
             ProfileUIView(color: self.color).tabItem {

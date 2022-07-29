@@ -20,9 +20,17 @@ struct OnboardingSurvey {
         steps += [instruction]
     
         //1: DOB
-    
+
         let dobAnswerFormat = ORKDateAnswerFormat.dateAnswerFormat()
         let dob = ORKFormItem(identifier: "DOB", text: "What is your date of birth?", answerFormat: dobAnswerFormat)
+        
+        //repeated display of question is resolved when converted to a question step
+        //let dob = ORKQuestionStep(identifier: "DOB", title: nil, question: "What is your date of birth?", answer: dobAnswerFormat)
+        //steps += [dob]
+        
+        // let dob = ORKFormItem(identifier: "DOB", text: "What is your date of birth?", detailText: "Tap to answer here", learnMoreItem: nil, showsProgress: false, answerFormat: dobAnswerFormat, tagText: "Tap 2", optional: false)
+
+        //let test = ORKFormItem(identifier: "", text: "", detailText: "", learnMoreItem: nil, showsProgress: "", answerFormat: dobAnswerFormat, tagText: "", optional: false)
     
         //2: Gender
     
@@ -163,15 +171,35 @@ struct OnboardingSurvey {
         
         steps += [upcomingProcedure]
         
-        /*let abiAnswerFormat = ORKAnswerFormat.weightAnswerFormat(with: .USC, numericPrecision: .default, minimumValue: 0.00, maximumValue: 2.00, defaultValue: 1.12)//ORKAnswerFormat.decimalAnswerFormat(withUnit: "Ankle Brachial Index")
+        //5a: ABIs
+        
+        let abiAnswerFormat = ORKAnswerFormat.continuousScale(withMaximumValue: 2.00, minimumValue: 0.00, defaultValue: 1.00, maximumFractionDigits: 2, vertical: true, maximumValueDescription: "Max - 1.99, Non-compressible - 2", minimumValueDescription: "Min - 0.00")//ORKAnswerFormat.weightAnswerFormat(with: .USC, numericPrecision: .default, minimumValue: 0.00, maximumValue: 2.00, defaultValue: 1.12)//ORKAnswerFormat.decimalAnswerFormat(withUnit: "Ankle Brachial Index")
         
         let leftABI = ORKQuestionStep(identifier: "Left-ABI", title: nil, question: "Input your ABI - Left Side (Minimum 0.00 - Maximum 1.99, Enter 2 for 'Non-compressible')", answer: abiAnswerFormat)
         
         let rightABI = ORKQuestionStep(identifier: "Right-ABI", title: nil, question: "Input your ABI - Right Side (Minimum 0.00 - Maximum 1.99, Enter 2 for 'Non-compressible')", answer: abiAnswerFormat)
         
-        steps += [leftABI, rightABI] */
+        steps += [leftABI, rightABI]
         
-        //6: Completion
+        //6: Medications
+        
+        let medChoices = [
+            ORKTextChoice(text: "Aspirin", value: 0 as NSCoding & NSCopying & NSObjectProtocol),
+            ORKTextChoice(text: "Plavix", value: 1 as NSCoding & NSCopying & NSObjectProtocol),
+            ORKTextChoice(text: "Statin", value: 2 as NSCoding & NSCopying & NSObjectProtocol),
+            ORKTextChoice(text: "Insulin", value: 3 as NSCoding & NSCopying & NSObjectProtocol),
+            ORKTextChoice(text: "Warfarin", value: 4 as NSCoding & NSCopying & NSObjectProtocol),
+            ORKTextChoice(text: "Other Blood Thinner", value: 5 as NSCoding & NSCopying & NSObjectProtocol),
+            ORKTextChoice(text: "None", value: 6 as NSCoding & NSCopying & NSObjectProtocol)
+        ]
+        
+        let medAnswerFormat = ORKAnswerFormat.choiceAnswerFormat(with: .multipleChoice, textChoices: medChoices)
+        
+        let medication = ORKQuestionStep(identifier: "Medication", title: nil, question: "Do you take any of the following medications?", answer: medAnswerFormat)
+        
+        steps += [medication]
+        
+        //7: Completion
         
         let summary = ORKCompletionStep(identifier:"Summary")
         summary.title = "Thank you for completing the survey."
@@ -184,16 +212,43 @@ struct OnboardingSurvey {
         var task = ORKNavigableOrderedTask(identifier: "OnboardingTask", steps: steps)
         
         let resultSelector: ORKResultSelector = ORKResultSelector(resultIdentifier: plannedSurgery.identifier)
-        let predicate = ORKResultPredicate.predicateForBooleanQuestionResult(with: resultSelector, expectedAnswer: false)
-        let navRule = ORKPredicateSkipStepNavigationRule(resultPredicate: predicate)
+        let predicateFalse = ORKResultPredicate.predicateForBooleanQuestionResult(with: resultSelector, expectedAnswer: false)
+        let predicateTrue = ORKResultPredicate.predicateForBooleanQuestionResult(with: resultSelector, expectedAnswer: true)
+        let navRule = ORKPredicateStepNavigationRule(resultPredicatesAndDestinationStepIdentifiers: [(predicateFalse, task.step(withIdentifier: "Summary")!.identifier),
+             (predicateTrue, task.step(withIdentifier: "UpcomingProcedure")!.identifier)]
+        )
         
-        task.setSkip(navRule, forStepIdentifier: upcomingProcedure.identifier)
+        //ORKPredicateSkipStepNavigationRule(resultPredicate: predicate)
         
-       /* let resultSelector2: ORKResultSelector = ORKResultSelector(resultIdentifier: upcomingProcedure.identifier)
-        let predicate2 = ORKResultPredicate.predicateForChoiceQuestionResult(with: resultSelector, matchingPattern: "Open / Hybrid Vascular Procedure")
-        let navRule2 = ORKPredicateSkipStepNavigationRule(resultPredicate: predicate2)
+        //task.setSkip(navRule, forStepIdentifier: upcomingProcedure.identifier)
+        task.setNavigationRule(navRule, forTriggerStepIdentifier: plannedSurgery.identifier)
         
-        task.setSkip(navRule2, forStepIdentifier: leftABI.identifier) */
+        
+        let resultSelector2: ORKResultSelector = ORKResultSelector(resultIdentifier: upcomingProcedure.identifier)
+        let predicate2a = ORKResultPredicate.predicateForChoiceQuestionResult(with: resultSelector2, expectedAnswerValue: 0 as NSCoding & NSCopying  & NSObjectProtocol)//matchingPattern: "Open / Hybrid Vascular Procedure")
+        let predicate2b = ORKResultPredicate.predicateForChoiceQuestionResult(with: resultSelector2, expectedAnswerValue: 1 as NSCoding & NSCopying  & NSObjectProtocol)
+        let predicate2c = ORKResultPredicate.predicateForChoiceQuestionResult(with: resultSelector2, expectedAnswerValue: 2 as NSCoding & NSCopying  & NSObjectProtocol)
+        let predicate2d = ORKResultPredicate.predicateForChoiceQuestionResult(with: resultSelector2, expectedAnswerValue: 3 as NSCoding & NSCopying  & NSObjectProtocol)
+        let predicate2e = ORKResultPredicate.predicateForChoiceQuestionResult(with: resultSelector2, expectedAnswerValue: 4 as NSCoding & NSCopying  & NSObjectProtocol)
+        let predicate2f = ORKResultPredicate.predicateForChoiceQuestionResult(with: resultSelector2, expectedAnswerValue: 5 as NSCoding & NSCopying  & NSObjectProtocol)
+        let predicate2g = ORKResultPredicate.predicateForChoiceQuestionResult(with: resultSelector2, expectedAnswerValue: 6 as NSCoding & NSCopying  & NSObjectProtocol)
+        let predicate2h = ORKResultPredicate.predicateForChoiceQuestionResult(with: resultSelector2, expectedAnswerValue: 7 as NSCoding & NSCopying  & NSObjectProtocol)
+        
+        let navRule2 = ORKPredicateStepNavigationRule(resultPredicatesAndDestinationStepIdentifiers: [(predicate2a, task.step(withIdentifier: "Left-ABI")!.identifier),
+            (predicate2b, task.step(withIdentifier: "Medication")!.identifier),
+            (predicate2c, task.step(withIdentifier: "Medication")!.identifier),
+            (predicate2d, task.step(withIdentifier: "Medication")!.identifier),
+            (predicate2e, task.step(withIdentifier: "Medication")!.identifier),
+            (predicate2f, task.step(withIdentifier: "Medication")!.identifier),
+            (predicate2g, task.step(withIdentifier: "Medication")!.identifier),
+            (predicate2h, task.step(withIdentifier: "Medication")!.identifier)]
+        )
+        
+        task.setNavigationRule(navRule2, forTriggerStepIdentifier: upcomingProcedure.identifier)
+        
+        //ORKPredicateSkipStepNavigationRule(resultPredicate: predicate2)
+        
+       // task.setSkip(navRule2, forStepIdentifier: leftABI.identifier)
         
         return task
     

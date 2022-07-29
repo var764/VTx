@@ -37,11 +37,14 @@ class SixMWTActiveViewController: OCKInstructionsTaskViewController, ORKTaskView
 
     // 3b. This method will be called when the user completes the survey.
     func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
-        taskViewController.dismiss(animated: false, completion: nil)
+
         guard reason == .completed else {
             taskView.completionButton.isSelected = false
             return
         }
+        
+        taskViewController.dismiss(animated: false, completion: nil)
+        
         // 4a. Retrieve the result from the ResearchKit survey
 
        controller.appendOutcomeValue(value: 1, at: IndexPath(item: 0, section: 0), completion: nil)

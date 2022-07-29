@@ -15,6 +15,8 @@ import RealmSwift
 import ResearchKit
 import CardinalKit
 import CareKitUI
+//import FLCharts
+
 
 class ScheduleViewController: OCKDailyPageViewController {
     
@@ -25,7 +27,7 @@ class ScheduleViewController: OCKDailyPageViewController {
     
     override func dailyPageViewController(_ dailyPageViewController: OCKDailyPageViewController, prepare listViewController: OCKListViewController, for date: Date) {
         
-        let identifiers = ["surveys", "WIQTask", "OnboardingTask", "SFTwelveTask", "6MWT"]
+        let identifiers = ["surveys", "WIQTask", "OnboardingTask", "SFTwelveTask", "6MWT", "DASITask"]
         var query = OCKTaskQuery(for: date)
         query.ids = identifiers
         query.excludesTasksWithNoEvents = true
@@ -106,7 +108,18 @@ class ScheduleViewController: OCKDailyPageViewController {
                         storeManager: self.storeManager)
                     
                     listViewController.appendViewController(surveyCard, animated: false)
-                } 
+                }
+                
+                if let dasiTask = tasks.first(where: {$0.id == "DASITask"}) {
+                    let surveyCard = DASIQuestionnaireViewController(
+                        viewSynchronizer: DASIQuestionnaireViewSynchronizer(),
+                        task: dasiTask,
+                        eventQuery: .init(for: date),
+                        storeManager: self.storeManager)
+                    
+                    listViewController.appendViewController(surveyCard, animated: false)
+                }
+                
                 //WIQ Chart//
                 
                 // dynamic gradient colors
@@ -122,7 +135,7 @@ class ScheduleViewController: OCKDailyPageViewController {
                     print("No data.")
                 }
                 
-                let aggregator = OCKEventAggregator.custom {events -> Double in
+                /*let aggregator = OCKEventAggregator.custom {events -> Double in
                     let value = events.first?.outcome?.values.first?.doubleValue ?? 0
                     return Double(value)
                 }
@@ -133,9 +146,83 @@ class ScheduleViewController: OCKDailyPageViewController {
                     gradientStartColor: wiqGradientStart,
                     gradientEndColor: wiqGradientEnd,
                     markerSize: 3,
-                    eventAggregator: aggregator)
+                    eventAggregator: aggregator)*/
                 
-                let insightsCard = OCKCartesianChartViewController(
+             //   @ObservedObject var dataViewModel = WIQChartViewModel()
+             //   var wiqPlotData = dataViewModel.wiqPoints
+                
+                
+                let defaults = UserDefaults.standard
+                var wiqGoal = 0
+                var wiqDataArr : [Int : Double] = [:]
+                var wiqPoints : [CGFloat] = []
+                
+                guard let authCollection =  CKStudyUser.shared.authCollection else { return }
+                let db = Firestore.firestore()
+                let collectionRef = db.collection(authCollection + "wiqscore")
+                wiqGoal = defaults.integer(forKey: "wiqscore")
+                var ind = 0
+                var weekPoints = [Int]()
+
+                collectionRef.order(by: "payload.date", descending: false).limit(to: 56).getDocuments() { (querySnapshot, err) in
+                    if let err = err {
+                        print("Error getting documents: \(err)")
+                    } else {
+                        for document in querySnapshot!.documents {
+                            print("\(document.documentID) => \(document.data())")
+                            let payload = document.data()["payload"] as? [String : Any]  // cast payload to dic
+                            let runningtotal = payload?["wiqscore"] as? Double ?? 0
+                            print("Float running total: ")
+                            print(CGFloat(runningtotal))
+                            wiqPoints.append(CGFloat(runningtotal))
+                            weekPoints.append(ind)
+                            // add in dictionary with key = document date
+                            wiqDataArr[ind] = runningtotal
+                            ind += 1
+                        }
+                        print("this is data arr")
+                        print("see stored wiq data:")
+                        print(wiqDataArr)
+                        
+                        let test = OCKDataSeries(values: wiqPoints, title: "Weekly Patient WIQ Score (%)", gradientStartColor: wiqGradientStart, gradientEndColor: wiqGradientEnd, size: 15)
+           
+                        let chart = OCKCartesianChartView(type: .bar)
+
+                        chart.graphView.dataSeries = [test]
+                        chart.graphView.yMaximum = 100
+                        chart.graphView.yMinimum = 0
+                        chart.graphView.xMaximum = 8
+                        chart.graphView.xMinimum = 0
+                        chart.headerView.titleLabel.text = "WIQ Score"
+                        chart.headerView.detailLabel.text = "Past 8 Weeks"
+                        chart.autoresizesSubviews = true
+                        listViewController.appendView(chart, animated: false)
+                        
+                    }
+                }
+                
+                
+                print("Working pt. 1")
+                print(wiqPoints)
+                
+         /*       let test = OCKDataSeries(values: wiqPoints, title: "Weekly Patient WIQ Score (%)", gradientStartColor: wiqGradientStart, gradientEndColor: wiqGradientEnd, size: 2)
+                
+                let chart = OCKCartesianChartView(type: .bar)
+                
+                chart.graphView.dataSeries = [test]
+                chart.graphView.yMaximum = 100
+                chart.graphView.yMinimum = 0
+                chart.graphView.xMaximum = 8
+                chart.graphView.xMinimum = 0
+                chart.headerView.titleLabel.text = "WIQ Score"
+                chart.headerView.detailLabel.text = "Past 8 Weeks"
+                chart.autoresizesSubviews = true */
+                //chart.contentStackView.showsOuterSeparators = true
+                
+                //listViewController.appendView(chart, animated: false)
+                
+                
+                /*let insightsCard = OCKCartesianChartViewController(
                     plotType: .line,
                     selectedDate: date,
                     configurations: [wiqDataSeries],
@@ -150,10 +237,10 @@ class ScheduleViewController: OCKDailyPageViewController {
                 
                 insightsCard.chartView.headerView.titleLabel.text = "WIQ Score"
                 insightsCard.chartView.headerView.detailLabel.text = "Weekly Tracking."
-                insightsCard.chartView.accessibilityLabel = "WIQ Score, Weekly Tracking."
-                listViewController.appendViewController(insightsCard, animated: false)
+                insightsCard.chartView.accessibilityLabel = "WIQ Score, Weekly Tracking."*/
+                //listViewController.appendViewController(insightsCard, animated: false)
             
-            
+                
                /* OCKChartViewController.
                 
                 CKSendHelper.getFromFirestore(collection: "wiqscore", identifier: "userID") { (document, error) in

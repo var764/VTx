@@ -196,11 +196,15 @@ internal extension OCKStore {
         onboardingSurveyTask.impactsAdherence = true
         onboardingSurveyTask.instructions = "Patient Onboarding Survey - Initial Info Intake."
         
+        //Add 6 Minute Walking Test
+        
         let sixMWTScheduleElem = OCKScheduleElement(start: morning, end: nil, interval: DateComponents(day: 7))
         let sixMWTActiveSchedule = OCKSchedule(composing: [sixMWTScheduleElem])
         var sixMWTActiveTask = OCKTask(id: "6MWT", title: "6 Minute Walking Test", carePlanUUID: nil, schedule: sixMWTActiveSchedule)
         sixMWTActiveTask.impactsAdherence = true
         sixMWTActiveTask.instructions = "Evaluate Patient Walking Ability."
+        
+        //Add SF-12 Survey
         
         let sfTwelveScheduleElem = OCKScheduleElement(start: morning, end: nil, interval: DateComponents(day: 28))
         let sfTwelveSurveySchedule = OCKSchedule(composing: [sfTwelveScheduleElem])
@@ -208,7 +212,16 @@ internal extension OCKStore {
         sfTwelveSurveyTask.impactsAdherence = true
         sfTwelveSurveyTask.instructions = "Complete Monthly Health Survey."
         
-        addTasks([onboardingSurveyTask, wiqSurveyTask, sixMWTActiveTask, sfTwelveSurveyTask], callbackQueue: .main, completion: nil)
+        //Add DASI Questionnaire
+        
+        let dasiScheduleElem = OCKScheduleElement(start: morning, end: nil, interval: DateComponents(day: 30))
+        let dasiSchedule = OCKSchedule(composing: [dasiScheduleElem])
+        var dasiSurveyTask = OCKTask(id: "DASITask", title: "DASI Questionnaire", carePlanUUID: nil, schedule: dasiSchedule)
+        dasiSurveyTask.impactsAdherence = true
+        dasiSurveyTask.instructions = "Evaluate Patient Functional Capacity."
+        
+        
+        addTasks([onboardingSurveyTask, wiqSurveyTask, sixMWTActiveTask, sfTwelveSurveyTask, dasiSurveyTask], callbackQueue: .main, completion: nil)
         createContacts()
         
     }

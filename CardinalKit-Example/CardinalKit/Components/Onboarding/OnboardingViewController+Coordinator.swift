@@ -11,7 +11,21 @@ import Firebase
 import CardinalKit
 
 class OnboardingViewCoordinator: NSObject, ORKTaskViewControllerDelegate {
-    
+
+    public func taskViewController(_ taskViewController: ORKTaskViewController, shouldPresent step: ORKStep) -> Bool {
+
+        // Only allow users to continue the onboarding process if they consent
+        if let consentStepResult = taskViewController.result.stepResult(forStepIdentifier: "ConsentReviewStep")?.results,
+           let signatureResult = consentStepResult[0] as? ORKConsentSignatureResult {
+            if !signatureResult.consented {
+                taskViewController.dismiss(animated: false, completion: nil)
+                return false
+            }
+        }
+
+        return true
+    }
+
     public func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
         let storage = Storage.storage()
         switch reason {
@@ -26,43 +40,30 @@ class OnboardingViewCoordinator: NSObject, ORKTaskViewControllerDelegate {
                 consentDocument.makePDF { (data, error) -> Void in
                     
                     let config = CKPropertyReader(file: "CKConfiguration")
+                    let consentFileName = config.read(query: "Consent File Name")
                         
                     var docURL = (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)).last as NSURL?
-                    docURL = docURL?.appendingPathComponent("\(config.read(query: "Consent File Name")).pdf") as NSURL?
+                    docURL = docURL?.appendingPathComponent("\(consentFileName).pdf") as NSURL?
                     
 
                     do {
                         let url = docURL! as URL
                         try data?.write(to: url)
-                        
+
                         UserDefaults.standard.set(url.path, forKey: "consentFormURL")
-                        
+
                         let storageRef = storage.reference()
-                        
+
                         if let DocumentCollection = CKStudyUser.shared.authCollection {
-                            let DocumentRef = storageRef.child("\(DocumentCollection)/Consent.pdf")
-                            
-                            // Upload the file to the path "images/rivers.jpg"
+                            let DocumentRef = storageRef.child("\(DocumentCollection)/\(consentFileName).pdf")
+
                             DocumentRef.putFile(from: url, metadata: nil) { metadata, error in
-                              guard let metadata = metadata else {
-                                // Uh-oh, an error occurred!
-                                return
-                              }
-                              // Metadata contains file metadata such as size, content-type.
-//                              let size = metadata.size
-                              // You can also access to download URL after upload.
-                                DocumentRef.downloadURL { (url, error) in
-                                guard let downloadURL = url else {
-                                  // Uh-oh, an error occurred!
-                                  return
+                                if let error = error {
+                                    print(error.localizedDescription)
                                 }
-                              }
                             }
                         }
                         
-                        
-                        
-
                     } catch let error {
 
                         print(error.localizedDescription)

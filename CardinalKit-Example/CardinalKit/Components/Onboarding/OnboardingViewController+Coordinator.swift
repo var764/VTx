@@ -16,13 +16,7 @@ class OnboardingViewCoordinator: NSObject, ORKTaskViewControllerDelegate {
         let storage = Storage.storage()
         switch reason {
         case .completed:
-            // if we completed the onboarding task view controller, go to study.
-            // performSegue(withIdentifier: "unwindToStudy", sender: nil)
-            
-            // TODO: where to go next?
-            // trigger "Studies UI"
             UserDefaults.standard.set(true, forKey: Constants.onboardingDidComplete)
-            NotificationCenter.default.post(name: NSNotification.Name(Constants.onboardingDidComplete), object: true)
             
             if let signatureResult = taskViewController.result.stepResult(forStepIdentifier: "ConsentReviewStep")?.results?.first as? ORKConsentSignatureResult {
                 

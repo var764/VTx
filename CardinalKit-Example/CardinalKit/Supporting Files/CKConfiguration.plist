@@ -53,6 +53,13 @@
 	</dict>
 	<key>Background Read Frequency</key>
 	<string>immediate</string>
+	<key>Sign In Screen</key>
+	<dict>
+		<key>Label Text</key>
+		<string>Sign In to VascTracX</string>
+		<key>Label Font Size</key>
+		<string>35</string>
+	</dict>
 	<key>Login-Sign-In-With-Facebook</key>
 	<dict>
 		<key>Enabled</key>

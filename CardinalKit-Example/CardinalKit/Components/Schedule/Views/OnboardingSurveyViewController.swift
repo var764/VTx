@@ -43,18 +43,56 @@ class OnboardingSurveyViewController: OCKInstructionsTaskViewController, ORKTask
             return
         }
         // 4a. Retrieve the result from the ResearchKit survey
+        
+        
+      /*  var postOpDate = Date()
+        var counter = 0
+        if let results = taskViewController.result.results as? [ORKStepResult] {
+            //print("\(results)")
+            for stepResult : ORKStepResult in results {
+                for result in stepResult.results as! [ORKResult] {
+                    
+                    if let questionResult = result as? ORKDateQuestionResult
+                    {
+                        counter += 1
+                        //print("\(questionResult.identifier), \(questionResult.answer)")
+                        if counter == 2 {
+                            postOpDate = questionResult.dateAnswer ?? Date()
+                            print("Post Op Date: ")
+                            print(postOpDate)
+                        }
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        
+        print("Post Op in Func")
+        print(postOpDate) */
 
         do {
             if let json = try CK_ORKSerialization.CKTaskAsJson(result: taskViewController.result,task: taskViewController.task!)
             {
+              /*  do {
+                    try CKSendHelper.sendToFirestoreWithUUID(json: ["postopdate": postOpDate], collection: "PostOpDate", withIdentifier: UUID().uuidString)
+                     } catch {
+                                print("error")
+                            }
+            */
+            
+               // controller.appendOutcomeValue(value: postOpDate, at: IndexPath(item: 0, section: 0), completion: nil)
                 
-                //dummy value for completion
                 controller.appendOutcomeValue(value: 1, at: IndexPath(item: 0, section: 0), completion: nil)
                 
-                let gcpDelegate = CKUploadToGCPTaskViewControllerDelegate()
-                gcpDelegate.taskViewController(taskViewController, didFinishWith: reason, error: error)
+                //dummy value for completion
+                //controller.appendOutcomeValue(value: 1, at: IndexPath(item: 0, section: 0), completion: nil)
 
             }
+            
+            let gcpDelegate = CKUploadToGCPTaskViewControllerDelegate()
+            gcpDelegate.taskViewController(taskViewController, didFinishWith: reason, error: error)
         }
         catch {
            print("error.")
@@ -81,3 +119,4 @@ class OnboardingSurveyViewSynchronizer: OCKInstructionsTaskViewSynchronizer {
         view.headerView.detailLabel.text = "Initial patient information intake."
     }
 }
+

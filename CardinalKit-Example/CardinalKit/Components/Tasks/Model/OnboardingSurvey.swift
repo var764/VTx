@@ -15,7 +15,7 @@ struct OnboardingSurvey {
     
         let instruction = ORKInstructionStep(identifier: "Patient Onboarding Intro")
         instruction.title = "Patient Onboarding Survey"
-        instruction.text = "Patient Onboarding"
+        instruction.text = "Gathering your basic information and medical history."
     
         steps += [instruction]
     
@@ -75,17 +75,23 @@ struct OnboardingSurvey {
         
         //3: Smoking Status
         
-        let smokingStatusChoices = [
+      /*  let smokingStatusChoices = [
             ORKTextChoice(text: "Current Smoker", value: 0 as NSCoding & NSCopying & NSObjectProtocol),
             ORKTextChoice(text: "Prior Smoker", value: 1 as NSCoding & NSCopying & NSObjectProtocol),
             ORKTextChoice(text: "Never Smoked", value: 2 as NSCoding & NSCopying & NSObjectProtocol)
+        ] */
+        
+        let smokingStatusAnswerFormat = ORKAnswerFormat.booleanAnswerFormat() //ORKAnswerFormat.choiceAnswerFormat(with: .singleChoice, textChoices: smokingStatusChoices)
+        
+        let smokingStatus = ORKFormItem(identifier: "SmokingStatus", text: "Have you regularly smoked cigarettes at any point in the past year?", answerFormat: smokingStatusAnswerFormat)
+        
+        let caregiverChoices = [
+            ORKTextChoice(text: "Yes, I require total support to live my daily life", value: 0 as NSCoding & NSCopying & NSObjectProtocol),
+            ORKTextChoice(text: "Yes, I have help to manage my health", value: 1 as NSCoding & NSCopying & NSObjectProtocol),
+            ORKTextChoice(text: "No, I manage my own health", value: 2 as NSCoding & NSCopying & NSObjectProtocol)
         ]
         
-        let smokingStatusAnswerFormat = ORKAnswerFormat.choiceAnswerFormat(with: .singleChoice, textChoices: smokingStatusChoices)
-        
-        let smokingStatus = ORKFormItem(identifier: "SmokingStatus", text: "What is your smoking status?", answerFormat: smokingStatusAnswerFormat)
-        
-        let caregiverAnswerFormat = ORKAnswerFormat.booleanAnswerFormat(withYesString: "Yes, I have help to manage my health.", noString: "No, I manage my own health.")
+        let caregiverAnswerFormat = ORKAnswerFormat.choiceAnswerFormat(with: .singleChoice, textChoices: caregiverChoices)//.booleanAnswerFormat(withYesString: "Yes, I have help to manage my health.", noString: "No, I manage my own health.")
         
         let caregiver = ORKFormItem(identifier: "Caregiver", text: "Do you have a caregiver?", answerFormat: caregiverAnswerFormat)
         
@@ -109,13 +115,54 @@ struct OnboardingSurvey {
         let diabetes = ORKFormItem(identifier: "Diabetes", text: "Do you have diabetes?", answerFormat: diabetesAnswerFormat)
         
         let hypertensionAnswerFormat = ORKAnswerFormat.booleanAnswerFormat()
-        let hypertension = ORKFormItem(identifier: "Hypertension", text: "Do you have hypertension?", answerFormat: hypertensionAnswerFormat)
+        let hypertension = ORKFormItem(identifier: "Hypertension", text: "Do you take medications for high blood pressure?", answerFormat: hypertensionAnswerFormat)
         
-        let heartFailureAnswerFormat = ORKAnswerFormat.booleanAnswerFormat()
-        let heartFailure = ORKFormItem(identifier: "HeartFailure", text: "Do you have congestive heart failure?", answerFormat: heartFailureAnswerFormat)
+        let dyspneaAnswerFormat = ORKAnswerFormat.booleanAnswerFormat()
+        let dyspnea = ORKFormItem(identifier: "Dyspnea", text: "Over the past 30 days, have you had shortness of breath greater than your normal state of health?", answerFormat: dyspneaAnswerFormat)
+        
+        
+        let chfChoices = [
+            ORKTextChoice(text: "Yes - I've been diagnosed in the past 30 days", value: 0 as NSCoding & NSCopying & NSObjectProtocol),
+            ORKTextChoice(text: "Yes - I was diagnosed more than 30 days ago, and I've been feeling short of breath, fatigued, or have swelling", value: 1 as NSCoding & NSCopying & NSObjectProtocol),
+            ORKTextChoice(text: "No", value: 2 as NSCoding & NSCopying & NSObjectProtocol)
+        ]
+        
+        let chfAnswerFormat = ORKAnswerFormat.choiceAnswerFormat(with: .singleChoice, textChoices: chfChoices)
+        let heartFailure = ORKFormItem(identifier: "HeartFailure", text: "Have you been diagnosed with heart failure in the past 30 days? If you have previously been diagnosed with heart failure more than 30 days ago, have you been feeling short of breath, fatigued or developed swelling in your legs?", answerFormat: chfAnswerFormat)
         
         let cholesterolAnswerFormat = ORKAnswerFormat.booleanAnswerFormat()
         let cholesterol = ORKFormItem(identifier: "Cholesterol", text: "Do you have high cholesterol?", answerFormat: cholesterolAnswerFormat)
+        
+        let copdChoices = [
+            ORKTextChoice(text: "Yes - I have been hospitalized for treatment", value: 0 as NSCoding & NSCopying & NSObjectProtocol),
+            ORKTextChoice(text: "Yes - it limits my ability to perform chores", value: 0 as NSCoding & NSCopying & NSObjectProtocol),
+            ORKTextChoice(text: "Yes - I have to take medication for treatment", value: 0 as NSCoding & NSCopying & NSObjectProtocol),
+            ORKTextChoice(text: "No, I was not diagnosed with COPD", value: 0 as NSCoding & NSCopying & NSObjectProtocol),
+        
+        ]
+        let copdAnswerFormat = ORKAnswerFormat.choiceAnswerFormat(with: .singleChoice, textChoices: copdChoices)
+        let copd = ORKFormItem(identifier: "COPD", text: """
+        Have you ever been diagnosed with COPD? If yes,
+        (1) Have you been hospitalized for treatment?
+        (2) Or does it limit your ability to perform chores around your home?
+        (3) Or have do you take medications (oral or inhaled) for treatment?
+        """, answerFormat: copdAnswerFormat)
+        
+        
+        let metastasisChoices = [
+            ORKTextChoice(text: "Yes, and I am or have undergone active treatment", value: 0 as NSCoding & NSCopying & NSObjectProtocol),
+            ORKTextChoice(text: "Yes, and I have decided not to undergo treatment", value: 1 as NSCoding & NSCopying & NSObjectProtocol),
+            ORKTextChoice(text: "Yes, and the cancer has been deemed untreatable", value: 2 as NSCoding & NSCopying & NSObjectProtocol),
+            ORKTextChoice(text: "No, I was not diagnosed with metastatic cancer", value: 3 as NSCoding & NSCopying & NSObjectProtocol)
+        ]
+        
+        let metastasisAnswerFormat = ORKAnswerFormat.choiceAnswerFormat(with: .singleChoice, textChoices: metastasisChoices)
+        let metastasis = ORKFormItem(identifier: "Metastasis", text: """
+                               Over the past year, were you diagnosed with cancer that has spread to another organ? If yes,
+                               (1) Have you undergone active treatment for the cancer within one year of your surgery date (if the surgery is to treat your cancer, select yes)?
+                               (2) Or have you decided not to undergo treatment for your metastatic cancer?
+                               (3) Or has your metastatic cancer been deemed untreatable?
+                               """, answerFormat: metastasisAnswerFormat)
         
         //Form Aggregation
         
@@ -142,17 +189,24 @@ struct OnboardingSurvey {
                                       
                                       """)
         
-        form3.formItems = [diabetes, hypertension, heartFailure, cholesterol]
+        form3.formItems = [diabetes, cholesterol, hypertension, dyspnea, heartFailure, copd, metastasis]
         steps += [form3]
         
         //4: Planned Surgery Status
         
-        let plannedSurgery = ORKQuestionStep(identifier:"PlannedSurgery", title:nil, question: "Do you have a planned surgery?", answer: ORKBooleanAnswerFormat(yesString: "Yes", noString: "No"))
+        let plannedSurgery = ORKQuestionStep(identifier:"PlannedSurgery", title:" Patient Onboarding", question: "Do you have a planned surgery?", answer: ORKBooleanAnswerFormat(yesString: "Yes", noString: "No"))
+        plannedSurgery.text = """
+          Treatment - Part 3.
+        
+        """
             //ORKFormItem(identifier:"PlannedSurgery", text: "Do you have a planned surgery?", answerFormat: ORKAnswerFormat.booleanAnswerFormat())
 
         steps += [plannedSurgery]
         
         //5: Upcoming Procedure
+        
+
+        
         
         let procedureChoices = [
             ORKTextChoice(text: "Open / Hybrid Vascular Procedure", value: 0 as NSCoding & NSCopying & NSObjectProtocol),
@@ -167,23 +221,27 @@ struct OnboardingSurvey {
         
         let upcomingProcedureAnswerFormat = ORKAnswerFormat.choiceAnswerFormat(with: .multipleChoice, textChoices: procedureChoices)
         
-        let upcomingProcedure = ORKQuestionStep(identifier: "UpcomingProcedure", title: nil, question: "What type of procedure is being planned?", answer: upcomingProcedureAnswerFormat)
+        let upcomingProcedure = ORKQuestionStep(identifier: "UpcomingProcedure", title: "Patient Onboarding", question: "What type of procedure is being planned?", answer: upcomingProcedureAnswerFormat)
+        upcomingProcedure.text = """
+          Treatment - Part 3.
+        
+        """
         
         steps += [upcomingProcedure]
         
         //5a: ABIs
         
-        let abiAnswerFormat = ORKAnswerFormat.continuousScale(withMaximumValue: 2.00, minimumValue: 0.00, defaultValue: 1.00, maximumFractionDigits: 2, vertical: true, maximumValueDescription: "Max - 1.99, Non-compressible - 2", minimumValueDescription: "Min - 0.00")//ORKAnswerFormat.weightAnswerFormat(with: .USC, numericPrecision: .default, minimumValue: 0.00, maximumValue: 2.00, defaultValue: 1.12)//ORKAnswerFormat.decimalAnswerFormat(withUnit: "Ankle Brachial Index")
+    /*    let abiAnswerFormat = ORKAnswerFormat.continuousScale(withMaximumValue: 2.00, minimumValue: 0.00, defaultValue: 1.00, maximumFractionDigits: 2, vertical: true, maximumValueDescription: "Max - 1.99, Non-compressible - 2", minimumValueDescription: "Min - 0.00")//ORKAnswerFormat.weightAnswerFormat(with: .USC, numericPrecision: .default, minimumValue: 0.00, maximumValue: 2.00, defaultValue: 1.12)//ORKAnswerFormat.decimalAnswerFormat(withUnit: "Ankle Brachial Index")
         
         let leftABI = ORKQuestionStep(identifier: "Left-ABI", title: nil, question: "Input your ABI - Left Side (Minimum 0.00 - Maximum 1.99, Enter 2 for 'Non-compressible')", answer: abiAnswerFormat)
         
         let rightABI = ORKQuestionStep(identifier: "Right-ABI", title: nil, question: "Input your ABI - Right Side (Minimum 0.00 - Maximum 1.99, Enter 2 for 'Non-compressible')", answer: abiAnswerFormat)
         
-        steps += [leftABI, rightABI]
+        steps += [leftABI, rightABI] */
         
         //6: Medications
         
-        let medChoices = [
+     /*   let medChoices = [
             ORKTextChoice(text: "Aspirin", value: 0 as NSCoding & NSCopying & NSObjectProtocol),
             ORKTextChoice(text: "Plavix", value: 1 as NSCoding & NSCopying & NSObjectProtocol),
             ORKTextChoice(text: "Statin", value: 2 as NSCoding & NSCopying & NSObjectProtocol),
@@ -193,9 +251,13 @@ struct OnboardingSurvey {
             ORKTextChoice(text: "None", value: 6 as NSCoding & NSCopying & NSObjectProtocol)
         ]
         
-        let medAnswerFormat = ORKAnswerFormat.choiceAnswerFormat(with: .multipleChoice, textChoices: medChoices)
+        let medAnswerFormat = ORKAnswerFormat.choiceAnswerFormat(with: .multipleChoice, textChoices: medChoices) */
+        //"Do you take any of the following medications?"
+        let medication = ORKQuestionStep(identifier: "Medication", title: "Patient Onboarding", question: "Over the past 30 days, have you taken long term steroids (>10 days) for a chronic medical condition?", answer: ORKAnswerFormat.booleanAnswerFormat())
+        medication.text = """
+          Treatment - Part 3.
         
-        let medication = ORKQuestionStep(identifier: "Medication", title: nil, question: "Do you take any of the following medications?", answer: medAnswerFormat)
+        """
         
         steps += [medication]
         
@@ -224,7 +286,7 @@ struct OnboardingSurvey {
         task.setNavigationRule(navRule, forTriggerStepIdentifier: plannedSurgery.identifier)
         
         
-        let resultSelector2: ORKResultSelector = ORKResultSelector(resultIdentifier: upcomingProcedure.identifier)
+     /*   let resultSelector2: ORKResultSelector = ORKResultSelector(resultIdentifier: upcomingProcedure.identifier)
         let predicate2a = ORKResultPredicate.predicateForChoiceQuestionResult(with: resultSelector2, expectedAnswerValue: 0 as NSCoding & NSCopying  & NSObjectProtocol)//matchingPattern: "Open / Hybrid Vascular Procedure")
         let predicate2b = ORKResultPredicate.predicateForChoiceQuestionResult(with: resultSelector2, expectedAnswerValue: 1 as NSCoding & NSCopying  & NSObjectProtocol)
         let predicate2c = ORKResultPredicate.predicateForChoiceQuestionResult(with: resultSelector2, expectedAnswerValue: 2 as NSCoding & NSCopying  & NSObjectProtocol)
@@ -248,7 +310,7 @@ struct OnboardingSurvey {
         
         //ORKPredicateSkipStepNavigationRule(resultPredicate: predicate2)
         
-       // task.setSkip(navRule2, forStepIdentifier: leftABI.identifier)
+       // task.setSkip(navRule2, forStepIdentifier: leftABI.identifier) */
         
         return task
     

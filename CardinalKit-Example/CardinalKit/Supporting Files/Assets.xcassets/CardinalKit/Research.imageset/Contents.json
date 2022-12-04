@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Research@1x-removebg-preview.jpg",
+      "filename" : "Research-removebg-preview@1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Research@2x-removebg-preview.jpg",
+      "filename" : "Research-removebg-preview@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Research@3x-removebg-preview.jpg",
+      "filename" : "Research-removebg-preview@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

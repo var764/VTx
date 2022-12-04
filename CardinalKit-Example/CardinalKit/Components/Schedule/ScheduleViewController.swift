@@ -20,14 +20,46 @@ import CareKitUI
 
 class ScheduleViewController: OCKDailyPageViewController {
     
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Schedule"
+        
+        let defaults = UserDefaults.standard
+        var postOpGoal = 0
+        var postOpDate_ = Date()
+        guard let authCollection =  CKStudyUser.shared.authCollection else { return }
+        let db = Firestore.firestore()
+        let collectionRef = db.collection(authCollection + "PostOpDate")
+        postOpGoal = defaults.integer(forKey: "postopdate")
+
+        collectionRef.limit(to: 5).getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            } else {
+                for document in querySnapshot!.documents {
+                    print("\(document.documentID) => \(document.data())")
+                    let payload = document.data()["payload"] as? [String : Any]  // cast payload to dic
+                    let date_ = payload!["postopdate"] as! Timestamp
+                    postOpDate_ = Date(timeIntervalSince1970: TimeInterval(date_.seconds))
+                    
+                    print("Post Op Date in CK: ")
+                    print(postOpDate_)
+                }
+                let defaults = UserDefaults.standard
+                defaults.set(postOpDate_ as! Date,forKey: "postOperativeDate")
+                //defaults.synchronize()
+            
+            }
+            
+        print("Test completed.")
+        }
+        
     }
     
     override func dailyPageViewController(_ dailyPageViewController: OCKDailyPageViewController, prepare listViewController: OCKListViewController, for date: Date) {
         
-        let identifiers = ["surveys", "WIQTask", "OnboardingTask", "SFTwelveTask", "6MWT", "DASITask"]
+        let identifiers = ["surveys", "OnboardingTask", "WIQTask", "6MWT", "RAITask"] //"DASITask" "SFTwelveTask"
         var query = OCKTaskQuery(for: date)
         query.ids = identifiers
         query.excludesTasksWithNoEvents = true
@@ -68,6 +100,16 @@ class ScheduleViewController: OCKDailyPageViewController {
                 
                 //Onboarding Survey//
                 
+                if let onboardingSurveyTask = tasks.first(where: {$0.id == "OnboardingTask"}) {
+                    let surveyCard = OnboardingSurveyViewController(
+                        viewSynchronizer: OnboardingSurveyViewSynchronizer(),
+                        task: onboardingSurveyTask,
+                        eventQuery: .init(for: date),
+                        storeManager: self.storeManager)
+                                                                    
+                    listViewController.appendViewController(surveyCard, animated: false)
+                }
+                
                 if let wiqSurveyTask = tasks.first(where: {$0.id == "WIQTask"}) {
                     //"OnboardingTask"
                     let surveyCard = SurveyItemViewController(
@@ -79,17 +121,7 @@ class ScheduleViewController: OCKDailyPageViewController {
                     listViewController.appendViewController(surveyCard, animated: false)
                 }
                 
-                if let onboardingSurveyTask = tasks.first(where: {$0.id == "OnboardingTask"}) {
-                    let surveyCard = OnboardingSurveyViewController(
-                        viewSynchronizer: OnboardingSurveyViewSynchronizer(),
-                        task: onboardingSurveyTask,
-                        eventQuery: .init(for: date),
-                        storeManager: self.storeManager)
-                                                                    
-                    listViewController.appendViewController(surveyCard, animated: false)
-                }
-                
-                if let sfTwelveSurveyTask = tasks.first(where: {$0.id == "SFTwelveTask"})
+              /*  if let sfTwelveSurveyTask = tasks.first(where: {$0.id == "SFTwelveTask"})
                 {
                     let surveyCard = SFTwelveSurveyViewController(
                         viewSynchronizer: SFTwelveSurveyViewSynchronizer(),
@@ -98,7 +130,7 @@ class ScheduleViewController: OCKDailyPageViewController {
                         storeManager: self.storeManager)
                     
                     listViewController.appendViewController(surveyCard, animated: false)
-                }
+                } */
                 
                 if let sixMWT = tasks.first(where: {$0.id == "6MWT"}) {
                     let surveyCard = SixMWTActiveViewController(
@@ -110,10 +142,10 @@ class ScheduleViewController: OCKDailyPageViewController {
                     listViewController.appendViewController(surveyCard, animated: false)
                 }
                 
-                if let dasiTask = tasks.first(where: {$0.id == "DASITask"}) {
-                    let surveyCard = DASIQuestionnaireViewController(
-                        viewSynchronizer: DASIQuestionnaireViewSynchronizer(),
-                        task: dasiTask,
+                if let raiTask = tasks.first(where: {$0.id == "RAITask"}) {
+                    let surveyCard = RAISurveyViewController(
+                        viewSynchronizer: RAISurveyViewSynchronizer(),
+                        task: raiTask,
                         eventQuery: .init(for: date),
                         storeManager: self.storeManager)
                     
@@ -362,9 +394,12 @@ class ScheduleViewController: OCKDailyPageViewController {
                 }
             }
         }
+
+        
     }
     
 }
+
 
 private extension View {
     func formattedHostingController() -> UIHostingController<Self> {
@@ -373,3 +408,4 @@ private extension View {
         return viewController
     }
 }
+

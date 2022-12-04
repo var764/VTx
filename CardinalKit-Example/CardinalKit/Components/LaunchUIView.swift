@@ -11,6 +11,36 @@ import UIKit
 import ResearchKit
 import CardinalKit
 import Firebase
+import CareKit
+
+struct LaunchUIView: View {
+
+    @AppStorage(Constants.onboardingDidComplete) var didCompleteOnboarding = false
+    @ObservedObject var auth: CKStudyUser = CKStudyUser.shared
+
+    var body: some View {
+        VStack(spacing: 10) {
+            if didCompleteOnboarding && (auth.currentUser != nil){
+                MainUIView()
+            } else {
+                OnboardingUIView()
+            }
+        }
+        
+    }
+}
+
+struct LaunchUIView_Previews: PreviewProvider {
+    static var previews: some View {
+        LaunchUIView()
+    }
+}
+
+/*import SwiftUI
+import UIKit
+import ResearchKit
+import CardinalKit
+import Firebase
 
 struct LaunchUIView: View {
     
@@ -51,4 +81,5 @@ struct LaunchUIView_Previews: PreviewProvider {
     static var previews: some View {
         LaunchUIView()
     }
-}
+} */
+

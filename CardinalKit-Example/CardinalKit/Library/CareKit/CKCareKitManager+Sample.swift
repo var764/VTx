@@ -177,51 +177,170 @@ internal extension OCKStore {
         })
         
         //Add WIQ Survey
-        
         let morning = Calendar.current.startOfDay(for: Date())
-        //reset onboarding every year
-        let wiqScheduleElem = OCKScheduleElement(start: morning, end: nil, interval: DateComponents(day:7))
+        let end = Calendar.current.date(byAdding: .day, value: 120, to: Date())
         
-        let wiqSurveySchedule = OCKSchedule(composing: [wiqScheduleElem])
-        var wiqSurveyTask = OCKTask(id: "WIQTask", title: "WIQ Survey", carePlanUUID: nil, schedule: wiqSurveySchedule) //"OnboardingTask", "Onboarding Survey"
-        wiqSurveyTask.impactsAdherence = true
-        wiqSurveyTask.instructions = "Walking Impairment Questionnaire"//"Complete the onboarding survey."
+        let defaults = UserDefaults.standard
+        var postOpGoal = 0
+        var postOpDate_ = Date()
+        guard let authCollection =  CKStudyUser.shared.authCollection else { return }
+        let db = Firestore.firestore()
+        let collectionRef = db.collection(authCollection + "PostOpDate")
+        postOpGoal = defaults.integer(forKey: "postopdate")
+
+        collectionRef.limit(to: 5).getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            } else {
+                for document in querySnapshot!.documents {
+                    print("\(document.documentID) => \(document.data())")
+                    let payload = document.data()["payload"] as? [String : Any]  // cast payload to dic
+                    let date_ = payload!["postopdate"] as! Timestamp
+                    postOpDate_ = Date(timeIntervalSince1970: TimeInterval(date_.seconds))
+                    
+                    print("Post Op Date in CK: ")
+                    print(postOpDate_)
+                }
+                let defaults = UserDefaults.standard
+                defaults.set(postOpDate_ as! Date,forKey: "postOperativeDate")
+                //defaults.synchronize()
+            
+            }
+            
+        print("Test completed.")
+        }
         
-        //Add Onboarding Survey
+      //  let defaults = UserDefaults.standard
+        var postOperativeDate = defaults.object(forKey: "postOperativeDate") as! Date// ?? Date()
         
-        let onboardingScheduleElem = OCKScheduleElement(start: morning, end: nil, interval: DateComponents(day:365))
+        print("Final operative date")
+        print(postOperativeDate)
         
+        let onboardingScheduleElem = OCKScheduleElement(start: morning, end: end, interval: DateComponents(day:365))
         let onboardingSurveySchedule = OCKSchedule(composing: [onboardingScheduleElem])
         var onboardingSurveyTask = OCKTask(id: "OnboardingTask", title: "Onboarding Survey", carePlanUUID: nil, schedule: onboardingSurveySchedule)
         onboardingSurveyTask.impactsAdherence = true
         onboardingSurveyTask.instructions = "Patient Onboarding Survey - Initial Info Intake."
         
+        let wiq30Start = Calendar.current.date(byAdding: .day, value: 30, to: postOperativeDate as! Date)
+        let wiq30ScheduleElem = OCKScheduleElement(start: wiq30Start!, end: nil, interval: DateComponents(day: 365))
+        
+        let wiq0ScheduleElem = OCKScheduleElement(start: morning, end: nil, interval: DateComponents(day:365))
+        
+        let wiq0SurveySchedule = OCKSchedule(composing: [wiq0ScheduleElem, wiq30ScheduleElem])
+        var wiq0SurveyTask = OCKTask(id: "WIQTask", title: "WIQ Survey", carePlanUUID: nil, schedule: wiq0SurveySchedule)
+        wiq0SurveyTask.impactsAdherence = true
+        wiq0SurveyTask.instructions = "Walking Impairment Questionnaire"
+        
+        
+        let rai0ScheduleElem = OCKScheduleElement(start: morning, end: nil, interval: DateComponents(day: 365))
+        
+        
+        let rai30Start = Calendar.current.date(byAdding: .day, value: 30, to: postOperativeDate as! Date)
+        let rai30ScheduleElem = OCKScheduleElement(start: rai30Start!, end: nil, interval: DateComponents(day: 365))
+        
+        let rai0Schedule = OCKSchedule(composing: [rai0ScheduleElem, rai30ScheduleElem])
+        var rai0SurveyTask = OCKTask(id: "RAITask", title: "Risk Analysis Index Survey", carePlanUUID: nil, schedule: rai0Schedule)
+        rai0SurveyTask.impactsAdherence = true
+        rai0SurveyTask.instructions = "Evaluate Patient Functional Capacity."
+        
+     /*   let rai30Start = Calendar.current.date(byAdding: .day, value: 30, to: postOpDate_)
+        let rai30ScheduleElem = OCKScheduleElement(start: rai30Start!, end: nil, interval: DateComponents(day: 365))
+        let rai30Schedule = OCKSchedule(composing: [rai30ScheduleElem])
+        var rai30SurveyTask = OCKTask(id: "RAITask", title: "Risk Analysis Index Survey", carePlanUUID: nil, schedule: rai30Schedule)
+        rai30SurveyTask.impactsAdherence = true
+        rai30SurveyTask.instructions = "Evaluate Patient Functional Capacity." */
+
+        
+        let smwt0ScheduleElem = OCKScheduleElement(start: morning, end: end, interval: DateComponents(day:365))
+        
+        let smwt30Start = Calendar.current.date(byAdding: .day, value: 30, to: postOperativeDate as! Date)
+        let smwt30ScheduleElem = OCKScheduleElement(start: smwt30Start!, end: end, interval: DateComponents(day: 365))
+        
+        let smwt60Start = Calendar.current.date(byAdding: .day, value: 60, to: postOperativeDate as! Date)
+        let smwt60ScheduleElem = OCKScheduleElement(start: smwt60Start!, end: end, interval: DateComponents(day: 365))
+        
+        let smwt0ActiveSchedule = OCKSchedule(composing: [smwt0ScheduleElem, smwt30ScheduleElem, smwt60ScheduleElem])
+        var smwt0ActiveTask = OCKTask(id: "6MWT", title: "6 Minute Walking Test", carePlanUUID: nil, schedule: smwt0ActiveSchedule)
+        smwt0ActiveTask.impactsAdherence = true
+        smwt0ActiveTask.instructions = "Evaluate Patient's Exercise Capacity."
+        
+      //  let demo = OCKTask(id:"6MWT", title: "6 Minute Walking Test", carePlanUUID: nil, schedule: smwt0ActiveSchedule)
+      //  let test = OCKEvent(task: demo, outcome: nil, scheduleEvent: OCKScheduleEvent(start: smwt30Start!, end: end!, element: smwt30ScheduleElem, occurrence: 1))
+        
+       /* let smwt30Start = Calendar.current.date(byAdding: .day, value: 30, to: postOpDate_)
+        let smwt30ScheduleElem = OCKScheduleElement(start: smwt30Start!, end: end, interval: DateComponents(day: 365))
+        let smwt30ActiveSchedule = OCKSchedule(composing: [smwt30ScheduleElem])
+        var smwt30ActiveTask = OCKTask(id: "6MWT", title: "6 Minute Walking Test", carePlanUUID: nil, schedule: smwt30ActiveSchedule)
+        smwt30ActiveTask.impactsAdherence = true
+        smwt30ActiveTask.instructions = "Evaluate Patient's Exercise Capacity." */
+        
+        
+       /* let smwt60Start = Calendar.current.date(byAdding: .day, value: 60, to: postOpDate_)
+        let smwt60ScheduleElem = OCKScheduleElement(start: smwt60Start!, end: end, interval: DateComponents(day: 365))
+        let smwt60ActiveSchedule = OCKSchedule(composing: [smwt60ScheduleElem])
+        var smwt60ActiveTask = OCKTask(id: "6MWT", title: "6 Minute Walking Test", carePlanUUID: nil, schedule: smwt60ActiveSchedule)
+        smwt60ActiveTask.impactsAdherence = true
+        smwt60ActiveTask.instructions = "Evaluate Patient's Exercise Capacity." */
+        
+        addTasks([onboardingSurveyTask, wiq0SurveyTask, rai0SurveyTask, smwt0ActiveTask], callbackQueue: .main, completion: nil)
+        
+        //reset onboarding every year
+        /*let wiqScheduleElem = OCKScheduleElement(start: morning, end: nil, interval: DateComponents(day:7))
+        
+        let wiqSurveySchedule = OCKSchedule(composing: [wiqScheduleElem])
+        var wiqSurveyTask = OCKTask(id: "WIQTask", title: "WIQ Survey", carePlanUUID: nil, schedule: wiqSurveySchedule) //"OnboardingTask", "Onboarding Survey"
+        wiqSurveyTask.impactsAdherence = true
+        wiqSurveyTask.instructions = "Walking Impairment Questionnaire" */
+        //"Complete the onboarding survey."
+        
+        //Add Onboarding Survey
+        
+       /* let onboardingScheduleElem = OCKScheduleElement(start: morning, end: nil, interval: DateComponents(day:365))
+        
+        let onboardingSurveySchedule = OCKSchedule(composing: [onboardingScheduleElem])
+        var onboardingSurveyTask = OCKTask(id: "OnboardingTask", title: "Onboarding Survey", carePlanUUID: nil, schedule: onboardingSurveySchedule)
+        onboardingSurveyTask.impactsAdherence = true
+        onboardingSurveyTask.instructions = "Patient Onboarding Survey - Initial Info Intake." */
+        
         //Add 6 Minute Walking Test
         
-        let sixMWTScheduleElem = OCKScheduleElement(start: morning, end: nil, interval: DateComponents(day: 7))
+      /*  let sixMWTScheduleElem = OCKScheduleElement(start: morning, end: endSMWT, interval: DateComponents(day: 30))
         let sixMWTActiveSchedule = OCKSchedule(composing: [sixMWTScheduleElem])
         var sixMWTActiveTask = OCKTask(id: "6MWT", title: "6 Minute Walking Test", carePlanUUID: nil, schedule: sixMWTActiveSchedule)
         sixMWTActiveTask.impactsAdherence = true
-        sixMWTActiveTask.instructions = "Evaluate Patient Walking Ability."
+        sixMWTActiveTask.instructions = "Evaluate Patient's Exercise Capacity." */
+        
+    /*    let raiScheduleElem = OCKScheduleElement(start: morning, end: endRAI, interval: DateComponents(day: 30))
+        //raiScheduleElem.
+        let raiSchedule = OCKSchedule(composing: [raiScheduleElem])
+        var raiSurveyTask = OCKTask(id: "RAITask", title: "Risk Analysis Index Survey", carePlanUUID: nil, schedule: raiSchedule)
+        raiSurveyTask.impactsAdherence = true
+        raiSurveyTask.instructions = "Evaluate Patient Functional Capacity." */
+        
+        
         
         //Add SF-12 Survey
         
-        let sfTwelveScheduleElem = OCKScheduleElement(start: morning, end: nil, interval: DateComponents(day: 28))
+      /*  let sfTwelveScheduleElem = OCKScheduleElement(start: morning, end: nil, interval: DateComponents(day: 28))
         let sfTwelveSurveySchedule = OCKSchedule(composing: [sfTwelveScheduleElem])
         var sfTwelveSurveyTask = OCKTask(id: "SFTwelveTask", title: "SF-12 Health Questionnaire", carePlanUUID: nil, schedule: sfTwelveSurveySchedule)
         sfTwelveSurveyTask.impactsAdherence = true
-        sfTwelveSurveyTask.instructions = "Complete Monthly Health Survey."
+        sfTwelveSurveyTask.instructions = "Complete Monthly Health Survey." */
         
         //Add DASI Questionnaire
         
-        let dasiScheduleElem = OCKScheduleElement(start: morning, end: nil, interval: DateComponents(day: 30))
+     /*   let dasiScheduleElem = OCKScheduleElement(start: morning, end: nil, interval: DateComponents(day: 30))
         let dasiSchedule = OCKSchedule(composing: [dasiScheduleElem])
         var dasiSurveyTask = OCKTask(id: "DASITask", title: "DASI Questionnaire", carePlanUUID: nil, schedule: dasiSchedule)
         dasiSurveyTask.impactsAdherence = true
-        dasiSurveyTask.instructions = "Evaluate Patient Functional Capacity."
+        dasiSurveyTask.instructions = "Evaluate Patient Functional Capacity." */
         
         
-        addTasks([onboardingSurveyTask, wiqSurveyTask, sixMWTActiveTask, sfTwelveSurveyTask, dasiSurveyTask], callbackQueue: .main, completion: nil)
+        
+        
+       // addTasks([onboardingSurveyTask, wiqSurveyTask, sixMWTActiveTask, raiSurveyTask], callbackQueue: .main, completion: nil)
+        //dasiSurveyTask, sfTwelveSurveyTask, 
         createContacts()
         
     }
@@ -251,8 +370,8 @@ internal extension OCKStore {
         contact2.title = "Vascular Surgeon"
         contact2.role = "Dr. Ross is one of the Principal Investigators of the VascTrac study."
         contact1.emailAddresses = [OCKLabeledValue(label: CNLabelEmailiCloud, value: "elsie.ross@stanford.edu")]
-        contact2.phoneNumbers = [OCKLabeledValue(label: CNLabelWork, value: "(650) 725-5227")]
-        contact2.messagingNumbers = [OCKLabeledValue(label: CNLabelWork, value: "(650) 725-5227")]
+        contact2.phoneNumbers = [OCKLabeledValue(label: CNLabelWork, value: "(650) 723-5477")]
+        contact2.messagingNumbers = [OCKLabeledValue(label: CNLabelWork, value: "(650) 723-5477")]
         contact2.address = {
             let address = OCKPostalAddress()
             address.street = "318 Campus Drive"
@@ -273,7 +392,7 @@ extension OCKHealthKitPassthroughStore {
 
         let schedule = OCKSchedule.dailyAtTime(
             hour: 8, minutes: 0, start: Date(), end: nil, text: nil,
-            duration: .hours(12), targetValues: [OCKOutcomeValue(2000.0, units: "Steps")])
+            duration: .hours(12), targetValues: [OCKOutcomeValue(100.0, units: "Steps")])
 
         let steps = OCKHealthKitTask(
             id: "steps",

@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Participation@1x-removebg-preview.jpg",
+      "filename" : "Participation_2-removebg-preview@1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Participation@2x-removebg-preview.jpg",
+      "filename" : "Participation_2-removebg-preview@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Participation@3x-removebg-preview.jpg",
+      "filename" : "Participation_2-removebg-preview@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

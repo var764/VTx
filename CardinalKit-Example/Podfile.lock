@@ -231,6 +231,7 @@ PODS:
     - SAMKeychain (~> 1.5.2)
     - SwiftyJSON (~> 4.1.0)
     - Zip (~> 1.1.0)
+  - ChartView (0.0.2)
   - FBAEMKit (12.1.0):
     - FBSDKCoreKit_Basics (= 12.1.0)
   - FBSDKCoreKit (12.1.0):
@@ -321,6 +322,7 @@ PODS:
   - FirebaseStorage (7.11.0):
     - FirebaseCore (~> 7.0)
     - GTMSessionFetcher/Core (~> 1.4)
+  - FLCharts (1.9.0)
   - GoogleAppMeasurement/AdIdSupport (7.11.0):
     - GoogleUtilities/AppDelegateSwizzler (~> 7.0)
     - GoogleUtilities/MethodSwizzler (~> 7.0)
@@ -402,25 +404,30 @@ PODS:
   - ResearchKit (2.1.0-beta)
   - SAMKeychain (1.5.3)
   - SwiftyJSON (4.1.0)
+  - TinyConstraints (4.0.2)
   - Zip (1.1.0)
 
 DEPENDENCIES:
   - CardinalKit (from `../`)
+  - ChartView
   - FBSDKLoginKit
   - Firebase/Analytics
   - Firebase/Auth
   - Firebase/DynamicLinks
   - Firebase/Firestore
   - Firebase/Storage
+  - FLCharts
   - GoogleSignIn
   - Granola (from `https://github.com/CardinalKit/Granola.git`, branch `main`)
   - ResearchKit (from `https://github.com/ResearchKit/ResearchKit.git`, branch `main`)
+  - TinyConstraints
 
 SPEC REPOS:
   trunk:
     - abseil
     - AppAuth
     - BoringSSL-GRPC
+    - ChartView
     - FBAEMKit
     - FBSDKCoreKit
     - FBSDKCoreKit_Basics
@@ -434,6 +441,7 @@ SPEC REPOS:
     - FirebaseFirestore
     - FirebaseInstallations
     - FirebaseStorage
+    - FLCharts
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleSignIn
@@ -452,6 +460,7 @@ SPEC REPOS:
     - RealmSwift
     - SAMKeychain
     - SwiftyJSON
+    - TinyConstraints
     - Zip
 
 EXTERNAL SOURCES:
@@ -477,6 +486,7 @@ SPEC CHECKSUMS:
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
   CardinalKit: c300a3d56de7d0f54503aea8a6b8436f8069f9e0
+  ChartView: 2aee81f64700ae9166f8bc5db2bf9a4ad6c5482f
   FBAEMKit: 56c0bb9b42e3747cd82b67934f0c2b19325382ea
   FBSDKCoreKit: 75368765d9c2303073145a7925dfaa9d60bcd77b
   FBSDKCoreKit_Basics: 39865aff97e5f6951a78fb3e89dc4460e35e1895
@@ -490,6 +500,7 @@ SPEC CHECKSUMS:
   FirebaseFirestore: f495bb336b23eca23ea5d3605dce2a4cc214fde9
   FirebaseInstallations: a58d4f72ec5861840b84df489f2668d970df558a
   FirebaseStorage: 8542711850ca181a3931c0ed483006a7b46039e7
+  FLCharts: 32914f511a56b6698e030efe0315a320dbb6428e
   GoogleAppMeasurement: fd19169c3034975cb934e865e5667bfdce59df7f
   GoogleDataTransport: cd9db2180fcecd8da1b561aea31e3e56cf834aa7
   GoogleSignIn: c90b5bec45e780f54c6a8e1e3c182a86e3dda69d
@@ -510,8 +521,9 @@ SPEC CHECKSUMS:
   ResearchKit: 9d6981b42c8633aa64097f4490be65abf39c350a
   SAMKeychain: 483e1c9f32984d50ca961e26818a534283b4cd5c
   SwiftyJSON: c29297daf073d2aa016295d5809cdd68045c39b3
+  TinyConstraints: 7b7ccc0c485bb3bb47082138ff28bc33cd49897f
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 549c36170930bcd868333a0b59bd5f15026d7e2a
+PODFILE CHECKSUM: 8d7fe4271938fc153e57885ab40f52589f494afc
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3

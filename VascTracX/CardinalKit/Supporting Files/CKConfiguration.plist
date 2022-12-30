@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AppId</key>
+	<string>415789243347763</string>
+	<key>Study Title</key>
+	<string>VascTrac X</string>
+	<key>Team Name</key>
+	<string>Stanford School of Medicine</string>
+	<key>Email</key>
+	<string>kmtz@stanford.edu</string>
+	<key>Phone</key>
+	<string>650-723-5477</string>
+	<key>Copyright</key>
+	<string>Made at Stanford with ❤️</string>
+	<key>Website</key>
+	<string>https://vasctrac.stanford.edu</string>
+	<key>Tint Color</key>
+	<string>#b6133f</string>
+	<key>Primary Color</key>
+	<string>#fb1943</string>
+	<key>Review Consent Step Text</key>
+	<string>Review Consent Form.</string>
+	<key>Reason for Consent Text</key>
+	<string>Consent to join the VascTrac X Study.</string>
+	<key>Consent File Name</key>
+	<string>MyConsentForm</string>
+	<key>Passcode Text</key>
+	<string>Now you will create a passcode to identify yourself to the app and protect access to information you&apos;ve entered.</string>
+	<key>Passcode Type</key>
+	<string>4</string>
+	<key>Completion Step Title</key>
+	<string>Welcome aboard.</string>
+	<key>Completion Step Text</key>
+	<string>This step concludes the registration process for VascTrac. Next up, you will see main app functionality.</string>
+	<key>Failed Login Title</key>
+	<string>Unable to Login 😔</string>
+	<key>Failed Login Text</key>
+	<string>Please try again in five minutes.</string>
+	<key>Health Permissions Title</key>
+	<string>Permission to read Activity Data 🏃🏽‍♀️</string>
+	<key>Health Permissions Text</key>
+	<string>VascTrac aims to analyze your mobility data from the study, which may include oxygen levels, pedometer and accelerometer information, and step counts.</string>
+	<key>Health Records</key>
+	<dict>
+		<key>Enabled</key>
+		<true/>
+		<key>Permissions Text</key>
+		<string>Your electronic health records (EHR) stored in Apple Health or other EHR systems provide VascTrac crucial context in analyzing the effect of activity on patient outcomes.</string>
+		<key>Permissions Title</key>
+		<string>Permission to read Health Records 🏥</string>
+	</dict>
+	<key>Background Read Frequency</key>
+	<string>immediate</string>
+	<key>Sign In Screen</key>
+	<dict>
+		<key>Label Text</key>
+		<string>Sign In to VascTracX</string>
+		<key>Label Font Size</key>
+		<string>35</string>
+	</dict>
+	<key>Login-Sign-In-With-Facebook</key>
+	<dict>
+		<key>Enabled</key>
+		<true/>
+	</dict>
+	<key>Login-Sign-In-With-Google</key>
+	<dict>
+		<key>Enabled</key>
+		<true/>
+	</dict>
+	<key>Login-Sign-In-With-UserPassword</key>
+	<dict>
+		<key>Enabled</key>
+		<true/>
+	</dict>
+	<key>Login-Sign-In-With-Apple</key>
+	<dict>
+		<key>Enabled</key>
+		<true/>
+		<key>Title</key>
+		<string>Sign in with Apple</string>
+		<key>Text</key>
+		<string>Sign in using your Apple ID is fast and easy, and Apple will not track any of your activities.</string>
+	</dict>
+	<key>Login-Passwordless</key>
+	<false/>
+	<key>Login Step Title</key>
+	<string>Almost done!</string>
+	<key>Login Step Text</key>
+	<string>We need to confirm your email address and send you a copy of the consent you just signed.</string>
+	<key>Withdrawal Instruction Title</key>
+	<string>Are you sure you want to withdraw?</string>
+	<key>Withdrawal Instruction Text</key>
+	<string>Withdrawing from the study will reset the app to the state it was in prior to you originally joining the study.</string>
+	<key>Withdraw Title</key>
+	<string>We appreciate your time.</string>
+	<key>Withdraw Text</key>
+	<string>Thank you for your contribution to this study. We are sorry that you could not continue. The app will now close.</string>
+	<key>Passcode On Return Text</key>
+	<string>Welcome back!</string>
+	<key>Consent Title</key>
+	<string>VascTrac X Consent Form &amp; Health Information Authorization</string>
+	<key>Use CareKit</key>
+	<true/>
+	<key>HealthKit Data to Read</key>
+	<array>
+		<string>StepCount</string>
+		<string>sixMinuteWalkTestDistance</string>
+		<string>vo2Max</string>
+		<string>HeartRate</string>
+	</array>
+	<key>Consent Form</key>
+	<dict>
+		<key>Overview</key>
+		<dict>
+			<key>Title</key>
+			<string>Purpose of Research</string>
+			<key>Summary</key>
+			<string>VascTrac is a research study of activity in patients who are considering having an operation. We hope to learn how activity changes over time in people who undergo procedures and how changes in activity could predict your recovery.</string>
+			<key>Content</key>
+			<string>You are invited to participate in a research study of activity in patients who are considering having an operation. We hope to learn how activity changes over time in people who undergo procedures and how changes in activity could predict your speed to recovery. You are eligible for this study if you are older than 18 years old and speak English. Health information provided by you and by reviewing your health records will be used to identify trends between physical fitness, participant demographics and outcomes. Furthermore, certain non-personally identifying information collected and analyzed in this study may be shared with external research partner(s). This research study is looking for 1000 participants.</string>
+		</dict>
+		<key>Voluntary Participation</key>
+		<dict>
+			<key>Title</key>
+			<string>Voluntary Participation</string>
+			<key>Summary</key>
+			<string>Your participation in this study is entirely voluntary, and you may choose to not participate or withdraw from this study without loss or negative effects on medical care.</string>
+			<key>Content</key>
+			<string>Your participation in this study is entirely voluntary.  Your decision not to participate will not have any negative effect on you or your medical care.  You can decide to participate now but withdraw your consent later and stop being in the study without any loss of benefits or medical care you are entitled to.</string>
+		</dict>
+		<key>TimeCommitment</key>
+		<dict>
+			<key>Title</key>
+			<string>Time Commitment</string>
+			<key>Summary</key>
+			<string>Your participation will take about 2 hours total over 3.5 months. This consists of one-time registration, walking tests, and medical questionnaires.</string>
+			<key>Content</key>
+			<string>Your participation in this experiment will take approximately 2 hours.</string>
+		</dict>
+		<key>StudySurvey</key>
+		<dict>
+			<key>Title</key>
+			<string>Procedures</string>
+			<key>Summary</key>
+			<string>The investigators will not require any medical procedures to be performed during the study. The investigators will monitor your activity using the activity tracker of your mobile phone and sometimes a research-grade activity tracker (accelerometer). In this study, you will primarily be asked to create a profile, complete medical questionnaires regarding walking impairment, and take 6-minute walking tests.</string>
+			<key>Content</key>
+			<string>The investigators will not require any medical procedures to be performed during the study. The investigators will monitor your activity using the activity tracker of your mobile phone and sometimes a research-grade activity tracker (accelerometer). The information described below under ‘Study Data’ will be collected by the VascTrac app which you will interact with to complete the tasks below and a second app. If you have questions about this app please contact a VascTrac team member
+ 
+The researchers may also study any previous physical activity data stored on your phone and will use your electronic health record to document your past medical history.  
+ 
+In the study, you will be asked to do the following:
+·  	First, create a profile by answering basic demographic information about 
+yourself, including your date of birth, gender, smoking status, and type of 
+planned surgery.
+·  	Second, complete the Walking Impairment Questionnaire (WIQ). This 
+survey is comprised of 22 questions which ask why, if at all, you had 
+difficulty walking and then ask about the degree of physical activity you have undertaken over the last week.
+·  	Third, to perform 6-minute walk tests and allow collection of certain activity 
+data, such as your physical activity, accelerometer, gyroscope, and daily 
+movement data in the background. 
+·  	More information about the data that will be collected from you in the study 
+is described below under the heading “STUDY DATA”.
+·  	Finally, to study the effect of app design on protocol compliance, you may 
+be randomly selected to receive newly designed versions of the app as it 
+is updated through the app store and receive different types of reminders, 
+such as a phone call or in-app message.
+ 
+In case of technical difficulty, you may contact a VascTrac team member who can help you enroll in the study on your phone.</string>
+		</dict>
+		<key>DataGathering</key>
+		<dict>
+			<key>Title</key>
+			<string>Study Data</string>
+			<key>Summary</key>
+			<string>As part of this study, the following information may be collected: contact &amp; demographic information, motion data from walking tests, self-reported medical information, passively monitored activity data, and device metadata.</string>
+			<key>Content</key>
+			<string>As part of this study, the information collected from you may include the following (we call this “Study Data”):
+·  	Contact information (e.g. name, email address, and phone number)
+·  	Demographic information (e.g.. age, gender, height, and weight)
+·  	Sensor information (e.g. accelerometer, gyroscope, heart rate)
+·  	Self-reported medical history and current symptom information (e.g. 
+medical diagnosis, test results, medications, symptoms, surgeries)
+·  	Passive Health Kit data (e.g. steps, walking and running distance, stand 
+hours, flights climbed, heart rate recovery and variability)  
+·  	Device metadata (e.g. Timezone, device operating system version, on/off 
+wrist status)</string>
+		</dict>
+		<key>StudyTasks</key>
+		<dict>
+			<key>Title</key>
+			<string>Participant Responsibilities</string>
+			<key>Summary</key>
+			<string>As a participant, your responsibilities include:
+·  Follow the instructions of the investigators and study staff.
+·  Complete your questionnaires as instructed.
+·  Contact us to ask questions as you think of them.
+·  Allow access to Location Services, Push Notifications, and motion sensors on your smartphone.</string>
+			<key>Content</key>
+			<string>As a participant, your responsibilities include:
+·  Follow the instructions of the investigators and study staff.
+·  Complete your questionnaires as instructed.
+·  Contact us to ask questions as you think of them.
+·  Allow access to Location Services, Push Notifications, and motion sensors on your smartphone.</string>
+		</dict>
+		<key>Withdrawing</key>
+		<dict>
+			<key>Title</key>
+			<string>Withdrawal From Study</string>
+			<key>Summary</key>
+			<string>You may withdraw at any time with no negative effects to medical care. If you want to withdraw, you may do so by notifying Elsie G. Ross at 650-723-5477 and exiting the VascTrac App (via the &quot;Leave Study&quot; option in the &quot;Profile&quot; menu). </string>
+			<key>Content</key>
+			<string>If you first agree to participate and then change your mind, you are free to withdraw your consent and discontinue your participation at any time. 
+If you decide to withdraw your consent to participate in this study, you should notify Elsie G. Ross at 650-723-5477. After your withdrawal from the study is confirmed, you may delete the smartphone application. 
+The Protocol Director may also withdraw you from the study without your consent for one or more of the following reasons: 
+• Failure to follow the instructions of the Protocol Director and study. 
+• The Protocol Director decides that continuing your participation could be harmful to you. 
+If you withdraw, no additional information will be collected from you but the Study Data that has already been collected from you prior to your withdrawal may be used as described in this consent form.
+ 
+If you want to stop being in the study you may do so from the VascTrac App.  In the “Profile” menu you will see a “Leave Study” option. Simply select this option and confirm your selection. If you withdraw from the study, you will not be able to use the VascTrac app anymore.</string>
+		</dict>
+		<key>Privacy</key>
+		<dict>
+			<key>Title</key>
+			<string>Confidentiality</string>
+			<key>Summary</key>
+			<string>We will keep your Study Data as confidential as possible. VascTrac will assign a code to your Protected Personal Information, store it in a secure location, and limit access to the data. Only the study&apos;s Protocol Directors, necessary units of Stanford University, and Research Staff are authorized to use the data.</string>
+			<key>Content</key>
+			<string>We will keep your Study Data as confidential as possible. 
+ 
+Study Data collected from or about you as part of the study that can directly identify you (including your name and address) is called “Protected Personal Information.”  Your Protected Personal Information will be held confidential by the study staff and access limited to those on the study staff who need access in order to administer and conduct the study. 
+ 
+We may publish the results of this study for others to read about, but you will not be identified in any articles about the study by name, social security number, address, telephone number, or any other Protected Personal Information. 
+ 
+Your remaining Study Data will be separated from your Protected Personal Information and will be assigned a key code (we call this “Coded Study Data”). Information about the Coded Data will be kept in a secure location and access will be limited as described in this consent.
+ 
+The following parties are authorized to use and/or disclose your Study Data (including your Protected Personal Information and Coded Study Data) in connection with this research to persons and organizations in the next paragraph:
+The Protocol Directors: Elsie Ross MD,  Oliver Aalami MD
+The Stanford University Administrative Panel on Human Subjects in Medical Research and any other unit of Stanford University as necessary
+Research Staff
+ 
+The parties listed in the preceding paragraph may disclose your Study Data to the following persons and organizations for their use in connection with this research study and as described in this consent form:
+The Office for Human Research Protections in the U.S. Department of Health and Human Services
+The Food and Drug Administration</string>
+		</dict>
+		<key>DataUse</key>
+		<dict>
+			<key>Title</key>
+			<string>Data Use</string>
+			<key>Summary</key>
+			<string>This study&apos;s goal is to develop a model to predict surgical outcomes based on mobility trends. The health information - your physical activity and survey responses - collected through the tasks discussed in Procedures will be used to construct the model.</string>
+			<key>Content</key>
+			<string>Information about your team&apos;s use of data. Additional content.</string>
+		</dict>
+	</dict>
+	<key>Onboarding</key>
+	<array>
+		<dict>
+			<key>Title</key>
+			<string>VascTrac X</string>
+			<key>Description</key>
+			<string>A Surgical Recovery Study</string>
+			<key>Logo</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Second Title</string>
+			<key>Description</key>
+			<string>Lorem Ipsum has been the industry&apos;s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</string>
+			<key>Logo</key>
+			<string>2️⃣</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Third Title</string>
+			<key>Description</key>
+			<string>It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</string>
+			<key>Logo</key>
+			<string>3️⃣</string>
+		</dict>
+	</array>
+	<key>Use Cloud Surveys</key>
+	<false/>
+</dict>
+</plist>

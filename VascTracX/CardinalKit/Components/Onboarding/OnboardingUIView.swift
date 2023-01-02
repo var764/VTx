@@ -19,7 +19,6 @@ struct OnboardingElement {
 }
 
 struct OnboardingUIView: View {
-    
     var onboardingElements: [OnboardingElement] = []
     let color: Color
     let config = CKPropertyReader(file: "CKConfiguration")
@@ -29,16 +28,23 @@ struct OnboardingUIView: View {
     var onComplete: (() -> Void)? = nil
     
     init(onComplete: (() -> Void)? = nil) {
-        let onboardingData = config.readAny(query: "Onboarding") as! [[String:String]]
-        
-        
-        self.color = Color(config.readColor(query: "Primary Color"))
+        self.color = Color(config.readColor(query: "Primary Color") ?? UIColor.primaryColor())
         self.onComplete = onComplete
-        
-        //rm logo: data["Logo"]!
-        
-        for data in onboardingData {
-            self.onboardingElements.append(OnboardingElement(title: data["Title"]!, description: data["Description"]!))
+
+        if let onboardingData = config.readAny(query: "Onboarding") as? [[String: String]] {
+            for data in onboardingData {
+                guard let title = data["Title"],
+                      let description = data["Description"] else {
+                    continue
+                }
+
+                let element = OnboardingElement(
+                    title: title,
+                    description: description
+                )
+
+                self.onboardingElements.append(element)
+            }
         }
     }
 
@@ -54,7 +60,7 @@ struct OnboardingUIView: View {
             
             Spacer(minLength: 2)
             
-            Text(config.read(query: "Study Title"))
+            Text(config.read(query: "Study Title") ?? "VascTrac X")
                 .foregroundColor(self.color)
                 .multilineTextAlignment(.center)
                 .font(.system(size: 35, weight: .bold, design: .default))

@@ -27,12 +27,12 @@ struct ProfileUIView: View {
                 Section {
                     SendRecordsView()
                     ChangePasscodeView()
-                    HelpView(site: config.read(query: "Website"))
+                    HelpView(site: config.read(query: "Website") ?? "https://cardinalkit.org")
                 }
                 
                 Section {
-                    ReportView(color: self.color, email: config.read(query: "Email"))
-                    SupportView(color: self.color, phone: config.read(query: "Phone"))
+                    ReportView(color: self.color, email: config.read(query: "Email") ?? "cardinalkit@stanford.edu")
+                    SupportView(color: self.color, phone: config.read(query: "Phone") ?? "123-456-7890")
                     DocumentView()
                 }
                 
@@ -41,7 +41,7 @@ struct ProfileUIView: View {
                 }
                 
                 Section {
-                    Text(config.read(query: "Copyright"))
+                    Text(config.read(query: "Copyright") ?? "Stanford Byers Center for Biodesign")
                 }
             }.listStyle(GroupedListStyle())
         }

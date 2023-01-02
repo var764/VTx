@@ -17,7 +17,7 @@ struct MainUIView: View {
     @State var carekitLoaded = false
     
     init() {
-        self.color = Color(config.readColor(query: "Primary Color"))
+        self.color = Color(config.readColor(query: "Primary Color") ?? UIColor.primaryColor())
         
     }
     
@@ -51,7 +51,7 @@ struct MainUIView: View {
         }
         .accentColor(self.color)
         .onAppear(perform: {
-            self.useCareKit = config.readBool(query: "Use CareKit")
+            self.useCareKit = config.readBool(query: "Use CareKit") ?? true
             
             let lastUpdateDate:Date? = UserDefaults.standard.object(forKey: Constants.prefCareKitCoreDataInitDate) as? Date
             CKCareKitManager.shared.coreDataStore.populateSampleData(lastUpdateDate:lastUpdateDate){() in

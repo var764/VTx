@@ -3,7 +3,7 @@
 //  CardinalKit_Example
 //
 //  Created by Santiago Gutierrez on 12/21/20.
-//  Copyright © 2020 CocoaPods. All rights reserved.
+//  Copyright © 2020 CardinalKit. All rights reserved.
 //
 
 import Foundation
@@ -19,7 +19,6 @@ class CKHealthRecordsManager: NSObject {
     lazy var healthStore = HKHealthStore()
     
     fileprivate let typesById: [HKClinicalTypeIdentifier] = [
-        .allergyRecord, // HKClinicalTypeIdentifierAllergyRecord
         .conditionRecord, // HKClinicalTypeIdentifierConditionRecord
         .immunizationRecord, // HKClinicalTypeIdentifierImmunizationRecord
         .labResultRecord, // HKClinicalTypeIdentifierLabResultRecord
@@ -47,8 +46,12 @@ class CKHealthRecordsManager: NSObject {
     
     func upload(_ onCompletion: ((Bool, Error?) -> Void)? = nil) {
         for type in types {
-            let query = HKSampleQuery(sampleType: type, predicate: nil, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { (query, samples, error) in
-                
+            let query = HKSampleQuery(
+                sampleType: type,
+                predicate: nil,
+                limit: HKObjectQueryNoLimit,
+                sortDescriptors: nil
+            ) { _, samples, error in
                 guard let samples = samples as? [HKClinicalRecord] else {
                     print("*** An error occurred: \(error?.localizedDescription ?? "nil") ***")
                     onCompletion?(false, error)
@@ -56,6 +59,7 @@ class CKHealthRecordsManager: NSObject {
                 }
                 
                 print("[CKHealthRecordsManager] upload() - sending \(samples.count) sample(s)")
+
                 for sample in samples {
                     guard let resource = sample.fhirResource else { continue }
                     do {
@@ -78,14 +82,14 @@ class CKHealthRecordsManager: NSObject {
     }
     
     func collectAndUploadAll(_ onCompletion: ((Bool, Error?) -> Void)? = nil){
-        CKHealthKitManager.shared.collectAllTypes({ (success, error) in
+        CKHealthKitManager.shared.collectAllTypes { _, error in
             if let error = error {
                 print(error)
-            }else{
+            } else {
                 UserDefaults.standard.set(Date(), forKey: Constants.prefHealthRecordsLastUploaded)
                 onCompletion?(true, nil)
             }
-        })
+        }
     }
     
 }

@@ -9,7 +9,5 @@
 import Foundation
 
 class CKConfig : CKPropertyReader {
-    
     static let shared = CKPropertyReader(file: "CKConfiguration")
-    
 }

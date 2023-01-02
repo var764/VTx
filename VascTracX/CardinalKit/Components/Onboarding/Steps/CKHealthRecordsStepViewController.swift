@@ -24,11 +24,11 @@ class CKHealthRecordsStep: ORKInstructionStep {
         
         let recordsConfig = config["Health Records"] 
         
-        if let _title = recordsConfig["Permissions Title"] as? String {
+        if let _title = recordsConfig?["Permissions Title"] as? String {
             title = NSLocalizedString(_title, comment: "")
         }
         
-        if let _text = recordsConfig["Permissions Text"] as? String {
+        if let _text = recordsConfig?["Permissions Text"] as? String {
             text = NSLocalizedString(_text, comment: "")
         }
     }
@@ -53,6 +53,8 @@ class CKHealthRecordsStepViewController: ORKInstructionStepViewController {
      Relies on a `CKHealthDataStep` instance as `self.step`.
     */
     override func goForward() {
+        self.showActivityIndicator(inContinueButton: true)
+        
         let manager = CKHealthRecordsManager.shared
         manager.getAuth { succeeded, _ in
             if succeeded {

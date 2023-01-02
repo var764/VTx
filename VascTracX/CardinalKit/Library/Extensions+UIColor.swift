@@ -16,4 +16,8 @@ public extension UIColor {
     class func lightWhite() -> UIColor {
         return UIColor(netHex: 0xf7f8f7)
     }
+
+    class func primaryColor() -> UIColor {
+        UIColor(red: 1.00, green: 0.22, blue: 0.38, alpha: 1.00)
+    }
 }

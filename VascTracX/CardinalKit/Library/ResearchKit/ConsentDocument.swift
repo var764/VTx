@@ -16,7 +16,7 @@ class ConsentDocument: ORKConsentDocument {
         let config = CKConfig.shared
         let consentTitle = config.read(query: "Consent Title")
         
-        title = NSLocalizedString(consentTitle, comment: "")
+        title = consentTitle ?? "Consent"
         sections = []
         
         let researchPurpose = ORKConsentSection(type: .custom)

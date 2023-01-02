@@ -21,8 +21,12 @@ class CKHealthDataStep: ORKInstructionStep {
         
         let config = CKConfig.shared
         
-        title = NSLocalizedString(config.read(query: "Health Permissions Title"), comment: "")
-        text = NSLocalizedString(config.read(query: "Health Permissions Text"), comment: "")
+        title = config.read(query: "Health Permissions Title") ?? "Permission to read Activity Data"
+        text = config.read(query: "Health Permissions Text") ?? """
+            Use this text to provide an explanation to your app participants about what activity data \
+            you intend to read from the Health app and why. This sample will read step count, distance, \
+            heart rate, and flights climbed data.
+        """
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -45,6 +49,8 @@ class CKHealthDataStepViewController: ORKInstructionStepViewController {
      Relies on a `CKHealthDataStep` instance as `self.step`.
     */
     override func goForward() {
+        self.showActivityIndicator(inContinueButton: true)
+        
         let manager = CKHealthKitManager.shared
         manager.getHealthAuthorization() { _,_ in
             OperationQueue.main.addOperation {

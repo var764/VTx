@@ -13,6 +13,5 @@ target 'VascTracX' do
   pod 'FBSDKLoginKit'
   pod 'TinyConstraints'
   pod 'ChartView'
-  pod 'FLCharts'
 
 end
